@@ -34,7 +34,8 @@ export const ATTACK_INFO: Record<ZAttack, { name: string; dodge: DodgeDir[]; hin
 export interface Note {
   id: number;
   beat: number;
-  kind: 'punch' | 'dodge';
+  /** stop = 원작에서 주먹이 멈추는 순간. 저절로 판정되고 키는 듣지 않는다 */
+  kind: 'punch' | 'dodge' | 'stop';
   row?: Row;
   col?: Col;
   attack?: ZAttack;
@@ -43,6 +44,18 @@ export interface Note {
   judge?: Judge;
   /** 외눈 보스의 사각(←)으로 피했다 */
   blind?: boolean;
+  /** 이야기 전투: 노트 위에 보이는 이름 (위빙, 라이트 스트레이트…) */
+  label?: string;
+  /** 받아 주는 피하기 방향 (없으면 공격 종류로 정한다) */
+  dodge?: DodgeDir[];
+  /** 누르고 버티는 박 수 (클린치) */
+  hold?: number;
+  holding?: boolean;
+  holdJudge?: Judge;
+  /** 맞혀도 피해가 없다 (아프지 않은 몸 — 간을 쳐도 접히지 않는다) */
+  noEffect?: string;
+  /** 이 노트를 맞히면 끝 (원펀치) */
+  finisher?: boolean;
 }
 
 type Phrase = 'jabs' | 'combo' | 'body' | 'attack' | 'rest' | 'rush';
@@ -94,7 +107,11 @@ export const RHYTHM = {
   noise: { swingHit: 2, biteHit: 1, grabHit: 1, timeout: 3 },
 };
 
+/** battle = 일반 전투, story = 원작 장면(하나라도 놓치면 다시), practice = 연습(놓쳐도 끝까지) */
+export type RhythmMode = 'battle' | 'story' | 'practice';
+
 export interface RhythmState {
+  mode: RhythmMode;
   enemy: RhythmEnemy;
   bpm: number;
   notes: Note[];
@@ -111,7 +128,7 @@ export interface RhythmState {
   bites: number;
   extraNoise: number;
   grabbed: boolean;
-  outcome: 'ongoing' | 'ko' | 'timeout';
+  outcome: 'ongoing' | 'ko' | 'timeout' | 'clear' | 'fail';
   events: RhythmEvent[];
 }
 
@@ -123,7 +140,13 @@ export type RhythmEvent =
   | { t: 'stagger' }
   | { t: 'escape' }
   | { t: 'ko' }
-  | { t: 'timeout' };
+  | { t: 'timeout' }
+  | { t: 'stopped'; note: Note }
+  | { t: 'holdStart'; note: Note }
+  | { t: 'holdDone'; note: Note }
+  | { t: 'noEffect'; note: Note; text: string }
+  | { t: 'clear' }
+  | { t: 'fail'; note: Note };
 
 export const msPerBeat = (bpm: number) => 60000 / bpm;
 
@@ -206,7 +229,7 @@ export function startRhythm(enemyId: string, seed: number, opts: { easy?: boolea
   const enemy = RHYTHM_ENEMIES[enemyId];
   const bpm = opts.easy ? 84 : enemy.bpm;
   return {
-    enemy, bpm,
+    mode: 'battle', enemy, bpm,
     notes: buildChart(enemy, seed, opts),
     totalBeats: RHYTHM.countIn + enemy.measures * 4 + 1,
     headHp: enemy.headHp, poise: enemy.poise, staggerUntil: -1,
@@ -225,8 +248,9 @@ function keyMatches(n: Note, key: string): boolean {
     const g = KEY_GRID[key];
     return !!g && g[0] === n.row && g[1] === n.col;
   }
+  if (n.kind !== 'dodge') return false;
   const d = DODGE_KEYS[key];
-  return !!d && ATTACK_INFO[n.attack!].dodge.includes(d);
+  return !!d && (n.dodge ?? ATTACK_INFO[n.attack!].dodge).includes(d);
 }
 
 function isDodgeKey(key: string) { return key in DODGE_KEYS; }
@@ -235,6 +259,14 @@ function applyMiss(s: RhythmState, n: Note) {
   n.judge = 'miss';
   s.misses += 1;
   s.combo = 0;
+  if (s.mode !== 'battle') {
+    s.events.push({ t: 'judge', note: n, judge: 'miss', dmg: 0, counter: false });
+    if (s.mode === 'story') {
+      s.outcome = 'fail';
+      s.events.push({ t: 'fail', note: n });
+    }
+    return;
+  }
   if (n.kind === 'dodge') {
     const atk = n.attack!;
     s.hitsTaken += 1;
@@ -262,6 +294,17 @@ function applyHit(s: RhythmState, n: Note, judge: Judge, beat: number) {
   if (n.kind === 'dodge') {
     s.events.push({ t: 'evaded', attack: n.attack!, blind: !!n.blind });
     s.events.push({ t: 'judge', note: n, judge, dmg: 0, counter: false });
+    return;
+  }
+  if (s.mode !== 'battle') {
+    s.events.push({ t: 'judge', note: n, judge, dmg: 0, counter: false });
+    if (n.noEffect) s.events.push({ t: 'noEffect', note: n, text: n.noEffect });
+    if (n.finisher) {
+      s.events.push({ t: 'ko' });
+      for (const x of s.notes) if (!x.judge) x.judge = 'perfect';
+      s.outcome = 'clear';
+      s.events.push({ t: 'clear' });
+    }
     return;
   }
   const headRow = s.enemy.low ? 1 : 0;
@@ -309,7 +352,7 @@ export function hit(s: RhythmState, rawKey: string, beat: number) {
   // 판정 창 안에서 이 키에 맞는 가장 가까운 노트
   let best: Note | null = null;
   for (const n of s.notes) {
-    if (n.judge) continue;
+    if (n.judge || n.holding || n.kind === 'stop') continue;
     if (n.beat - beat > window) break;
     if (Math.abs(n.beat - beat) <= window && keyMatches(n, key)) {
       if (!best || Math.abs(n.beat - beat) < Math.abs(best.beat - beat)) best = n;
@@ -323,7 +366,34 @@ export function hit(s: RhythmState, rawKey: string, beat: number) {
   const ms = Math.abs(best.beat - beat) * mpb;
   // 외눈 보스: 왼쪽으로 피하면 사각
   if (best.kind === 'dodge') best.blind = !!s.enemy.blindLeft && DODGE_KEYS[key] === 'left';
-  applyHit(s, best, ms <= RHYTHM.perfectMs ? 'perfect' : 'good', beat);
+  const j: Judge = ms <= RHYTHM.perfectMs ? 'perfect' : 'good';
+  if (best.hold) {
+    best.holding = true;
+    best.holdJudge = j;
+    s.events.push({ t: 'holdStart', note: best });
+    return;
+  }
+  applyHit(s, best, j, beat);
+}
+
+/** 키를 뗐다: 버티는 노트(클린치)를 너무 일찍 놓으면 놓침 */
+export function release(s: RhythmState, rawKey: string, beat: number) {
+  if (s.outcome !== 'ongoing') return;
+  const key = rawKey.toLowerCase();
+  for (const n of s.notes) {
+    if (!n.holding || n.judge || !keyMatches(n, key)) continue;
+    n.holding = false;
+    if (beat < n.beat + n.hold! - 0.25) applyMiss(s, n);
+    else { applyHit(s, n, n.holdJudge ?? 'good', beat); s.events.push({ t: 'holdDone', note: n }); }
+  }
+}
+
+function finishIfDone(s: RhythmState) {
+  if (s.mode === 'battle' || s.outcome !== 'ongoing') return;
+  if (s.notes.every((n) => n.judge)) {
+    s.outcome = 'clear';
+    s.events.push({ t: 'clear' });
+  }
 }
 
 /** 시간이 흐른다: 판정 창을 지난 노트는 놓침 */
@@ -332,12 +402,29 @@ export function advance(s: RhythmState, beat: number) {
   const window = RHYTHM.goodMs / msPerBeat(s.bpm);
   for (const n of s.notes) {
     if (n.judge) continue;
+    if (n.holding) {
+      if (beat >= n.beat + n.hold!) {
+        n.holding = false;
+        applyHit(s, n, n.holdJudge ?? 'good', beat);
+        s.events.push({ t: 'holdDone', note: n });
+        if (s.outcome !== 'ongoing') return;
+      }
+      continue;
+    }
+    if (n.kind === 'stop') {
+      if (beat >= n.beat) {
+        n.judge = 'perfect';
+        s.events.push({ t: 'stopped', note: n });
+      } else break;
+      continue;
+    }
     if (n.beat + window < beat) {
       applyMiss(s, n);
       if (s.outcome !== 'ongoing') return;
     } else break;
   }
-  if (beat >= s.totalBeats && s.outcome === 'ongoing') {
+  finishIfDone(s);
+  if (s.mode === 'battle' && beat >= s.totalBeats && s.outcome === 'ongoing') {
     s.outcome = 'timeout';
     s.events.push({ t: 'timeout' });
   }

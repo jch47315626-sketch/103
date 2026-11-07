@@ -124,3 +124,22 @@ export const beat = {
   bass(when: number, freq: number, dur: number) { toneAt(when, freq, dur, 0.22, 'sawtooth'); toneAt(when, freq / 2, dur, 0.25, 'sine'); },
   bell(when: number) { toneAt(when, 1318, 1.2, 0.2); toneAt(when, 659, 1.4, 0.1); },
 };
+
+/** 왼쪽 귀에만 들리는 소리 — 안대 쪽에서 오는 것을 알린다 */
+export function cueLeft(when: number) {
+  if (!ctx || muted || !noiseBuf) return;
+  const pan = ctx.createStereoPanner();
+  pan.pan.value = -1;
+  pan.connect(ctx.destination);
+  const o = ctx.createOscillator();
+  o.type = 'square';
+  o.frequency.setValueAtTime(140, when);
+  o.frequency.exponentialRampToValueAtTime(95, when + 0.35);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, when);
+  g.gain.exponentialRampToValueAtTime(0.18, when + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + 0.4);
+  o.connect(g).connect(pan);
+  o.start(when);
+  o.stop(when + 0.45);
+}
