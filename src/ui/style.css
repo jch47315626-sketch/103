@@ -23,7 +23,13 @@ body {
   line-height: 1.5;
 }
 
-#app { max-width: 980px; margin: 0 auto; padding: 16px; }
+#app {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-block: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
 
 h1 { font-size: 20px; margin: 0; }
 h1 small { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 6px; }
