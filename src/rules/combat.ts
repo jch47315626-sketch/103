@@ -5,7 +5,8 @@
 // 아니면 라운드 끝에 감염자가 예고한 행동을 한다.
 //
 // 감염자에게는 HP가 없고 '자세'만 있다. 몸통 공격으로 자세를 무너뜨려 머리를 열고,
-// 머리로만 KO를 낸다. 모든 함수는 입력을 바꾸지 않고 새 상태를 돌려준다.
+// 머리로만 KO를 낸다. 코크스크류는 확실하지만 느려서 예고된 공격을 먼저 맞는다.
+// 모든 함수는 입력을 바꾸지 않고 새 상태를 돌려준다.
 
 import { CARDS, INTENTS } from './data';
 import { pickWeighted } from './rng';
@@ -81,6 +82,29 @@ export function resolveRound(prev: CombatState, plan: CardId[], tuning: Tuning):
   let counter = false;
   let evaded = false;
   let ko = false;
+  let enemyActed = false;
+
+  const enemyAct = () => {
+    enemyActed = true;
+    if (s.intent === 'stagger') return;
+    if (evaded) {
+      say(`${INTENTS[s.intent].name} — 허공을 가른다`, 'evade');
+      return;
+    }
+    s.hitsTaken += 1;
+    if (s.intent === 'bite') {
+      s.bites += 1;
+      s.grabbed = false;
+      s.noise += tuning.noise.biteHit;
+      say(`물렸다! 감염 타이머 시작 · 소음 +${tuning.noise.biteHit}`, 'hurt');
+    } else if (s.intent === 'grab') {
+      s.grabbed = true;
+      say('붙잡혔다! 다음 라운드에 반드시 문다', 'hurt');
+    } else if (s.intent === 'push') {
+      s.noise += tuning.noise.pushHit;
+      say(`밀려서 철문에 부딪혔다 · 소음 +${tuning.noise.pushHit}`, 'hurt');
+    }
+  };
 
   for (const card of plan) {
     const name = CARDS[card].name;
@@ -111,6 +135,11 @@ export function resolveRound(prev: CombatState, plan: CardId[], tuning: Tuning):
         break;
       }
       case 'cork': {
+        // 큰 펀치라 느리다: 피하지 못한 예고 공격이 먼저 들어온다
+        if (!enemyActed && !evaded && s.intent !== 'stagger') {
+          say(`${name} — 크게 감아 치는 사이에…`, 'info');
+          enemyAct();
+        }
         const limit = tuning.corkKoPoise + (counter ? tuning.counterKoBonus : 0);
         if (!e.lowTarget && s.poise <= limit) {
           ko = true;
@@ -167,26 +196,8 @@ export function resolveRound(prev: CombatState, plan: CardId[], tuning: Tuning):
     return { state: s, events };
   }
 
-  // 감염자 행동
-  if (s.intent !== 'stagger') {
-    if (evaded) {
-      say(`${INTENTS[s.intent].name} — 허공을 가른다`, 'evade');
-    } else {
-      s.hitsTaken += 1;
-      if (s.intent === 'bite') {
-        s.bites += 1;
-        s.grabbed = false;
-        s.noise += tuning.noise.biteHit;
-        say(`물렸다! 감염 타이머 시작 · 소음 +${tuning.noise.biteHit}`, 'hurt');
-      } else if (s.intent === 'grab') {
-        s.grabbed = true;
-        say('붙잡혔다! 다음 라운드에 반드시 문다', 'hurt');
-      } else if (s.intent === 'push') {
-        s.noise += tuning.noise.pushHit;
-        say(`밀려서 철문에 부딪혔다 · 소음 +${tuning.noise.pushHit}`, 'hurt');
-      }
-    }
-  }
+  // 감염자 행동 (코크스크류 선딜레이 때 이미 처리됐으면 건너뜀)
+  if (!enemyActed) enemyAct();
 
   s.round += 1;
   if (s.round > s.maxRounds) {

@@ -81,6 +81,19 @@ describe('전투 규칙', () => {
     expect(state.poise).toBe(2);
   });
 
+  it('코크스크류는 느리다: 물기 예고면 먼저 물리고 KO', () => {
+    const { state } = resolveRound({ ...fight(normal, 'bite'), poise: 2 }, ['cork'], T);
+    expect(state.outcome).toBe('ko');
+    expect(state.bites).toBe(1);
+  });
+
+  it('코크스크류: 잡기 예고면 잡혀도 KO라 손해가 없다', () => {
+    const { state } = resolveRound({ ...fight(normal, 'grab'), poise: 2 }, ['cork'], T);
+    expect(state.outcome).toBe('ko');
+    expect(state.bites).toBe(0);
+    expect(state.noise).toBe(0);
+  });
+
   it('입력 상태를 바꾸지 않는다', () => {
     const s = fight(normal, 'bite');
     resolveRound(s, ['jab', 'body'], T);

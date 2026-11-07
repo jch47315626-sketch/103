@@ -14,6 +14,7 @@ describe('밸런스 시뮬레이션', () => {
           적: s.enemy, 봇: bot === 'greedy' ? '잘 읽는 봇' : '아무렇게나',
           '1R KO': pct(s.koRound1), KO: pct(s.koTotal), '물림': pct(s.bitten),
           '평균 소음': s.avgNoise.toFixed(2), '평균 라운드': s.avgRounds.toFixed(2),
+          'KO 기술': Object.entries(s.finishers).map(([k, v]) => `${k} ${pct(v)}`).join(' '),
         };
       }),
     );

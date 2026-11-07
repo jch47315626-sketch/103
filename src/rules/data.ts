@@ -9,7 +9,7 @@ export const CARDS: Record<CardId, { name: string; text: string; attack: boolean
   clinch: { name: '클린치', text: '잡기를 무력화. 이후 공격 불가', attack: false },
   body: { name: '바디', text: '자세 −2', attack: true },
   upper: { name: '어퍼', text: '머리가 열렸으면 KO, 아니면 자세 −1', attack: true },
-  cork: { name: '코크스크류', text: '자세 2 이하면 KO, 아니면 빗나감(소음 +1)', attack: true },
+  cork: { name: '코크스크류', text: '자세 2 이하면 KO. 느려서 피하지 못한 예고 공격을 먼저 맞는다', attack: true },
 };
 
 export const INTENTS: Record<Intent, { icon: string; name: string; text: string }> = {

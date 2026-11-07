@@ -49,16 +49,22 @@ export interface SimStats {
   bitten: number;
   avgNoise: number;
   avgRounds: number;
+  /** KO를 낸 기술 비율 */
+  finishers: Record<string, number>;
 }
 
 export function simulate(enemy: EnemyDef, tuning: Tuning, bot: BotKind, fights = 1000, seed = 103): SimStats {
   let koRound1 = 0, koTotal = 0, timeout = 0, bitten = 0, noise = 0, rounds = 0;
+  const fin: Record<string, number> = {};
   for (let i = 0; i < fights; i++) {
     let s = startCombat(enemy, tuning, seed * 7919 + i);
     let guard = 0;
     while (s.outcome === 'ongoing' && guard++ < 20) {
       const plan = bot === 'greedy' ? greedyPlan(s, tuning) : randomPlan(s, tuning, seed + i * 31 + s.round);
-      s = resolveRound(s, plan, tuning).state;
+      const r = resolveRound(s, plan, tuning);
+      const ko = r.events.find((e) => e.kind === 'ko');
+      if (ko) { const name = ko.text.split(' ')[0]; fin[name] = (fin[name] ?? 0) + 1; }
+      s = r.state;
     }
     if (s.outcome === 'ko') {
       koTotal++;
@@ -81,5 +87,6 @@ export function simulate(enemy: EnemyDef, tuning: Tuning, bot: BotKind, fights =
     bitten: bitten / fights,
     avgNoise: noise / fights,
     avgRounds: rounds / fights,
+    finishers: Object.fromEntries(Object.entries(fin).map(([k, v]) => [k, v / Math.max(1, koTotal)])),
   };
 }
