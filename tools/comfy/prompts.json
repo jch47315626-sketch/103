@@ -1,0 +1,83 @@
+{
+  "style": "Korean webtoon illustration, semi-realistic, clean ink lines with soft cel shading, cold desaturated palette (concrete grey, night navy, sickly green emergency light), small accents of warm orange and blood red, cinematic lighting, quiet dread, Korean apartment complex survival drama, no text, no watermark, no logo",
+  "negative": "text, letters, watermark, signature, logo, extra fingers, deformed hands, bad anatomy, cartoonish chibi, bright saturated colors, gore close-up, exposed organs, anime moe style, two eyepatches, lowres, blurry, jpeg artifacts",
+
+  "kinds": {
+    "sheet": { "gen": [1216, 832], "suffix": "" },
+    "bg":    { "gen": [1600, 640], "out": [1920, 760], "suffix": "no people, empty scene, important details in the upper two thirds" },
+    "fight": { "gen": [1344, 768], "out": [1920, 1080], "suffix": "no people, first-person point of view, the left third of the image falls into deep darkness" },
+    "enemy": { "gen": [896, 1152], "cutout": true, "suffix": "front-facing, waist-up, looking straight at the viewer, single character, plain flat white background, rim light from the right" },
+    "hud":   { "gen": [1024, 1024], "cutout": true, "suffix": "plain flat white background" },
+    "item":  { "gen": [1024, 1024], "cutout": true, "suffix": "single object, centered, soft shadow, webtoon item icon, plain flat white background" },
+    "title": { "gen": [1344, 768], "out": [1920, 1080], "suffix": "" }
+  },
+
+  "variants": {
+    "enemy": {
+      "windupL": "pulling the arm back for a wide clawing swipe from the left",
+      "windupR": "pulling the arm back for a wide clawing swipe from the right",
+      "bite": "lunging head first with jaws wide open",
+      "grab": "both hands thrust forward to grab",
+      "hit": "head snapped back from a punch, motion blur",
+      "down": "collapsing backward, knocked out"
+    },
+    "hud": {
+      "jab": "fist thrust straight forward, motion blur",
+      "upper": "fist swinging upward from below, motion blur",
+      "body": "fist thrust low and forward, motion blur"
+    }
+  },
+
+  "images": [
+    { "name": "char_taeri", "kind": "sheet", "prompt": "character reference sheet, front view, side view, back view, full body, plain light grey background, Kang Taeri, 27-year-old Korean woman, former undefeated boxing champion, lean athletic boxer build, broad shoulders, sharp jaw, short black hair tied in a low ponytail, black leather eyepatch over her LEFT eye (appears on the viewer's right in front view), thin strap around the head, calm tired right eye, faint scar near the left eyebrow, navy Korean girls' high school winter uniform, sailor collar with white trim, red ribbon, pleated navy skirt, pink backpack, both fists wrapped in white compression bandages up to the wrists" },
+    { "name": "char_taeri_track", "kind": "sheet", "prompt": "character reference sheet, front view, side view, back view, full body, plain light grey background, Kang Taeri, 27-year-old Korean woman, former undefeated boxing champion, lean athletic boxer build, short black hair tied in a low ponytail, black leather eyepatch over her LEFT eye (appears on the viewer's right in front view), black training tracksuit zipped up, tiny red embroidery on the back, both fists wrapped in white compression bandages, boxer's stance, chin tucked" },
+    { "name": "char_doyun", "kind": "sheet", "prompt": "character reference sheet, two versions of the same man side by side, plain light grey background, LEFT: Han Doyun, early 30s Korean man, gentle face, eyes that curve into half-moons when he smiles, neat short hair, white dress shirt, navy slacks, blue lanyard with a staff ID card, holding a stack of delivery parcels, RIGHT: the same man infected, left side of the neck torn, white shirt soaked dark red from collar to chest, whites of the eyes completely blood red, pinpoint pupils, broken blue lanyard hanging from the neck, one leather shoe, the other foot in a worn grey sock" },
+    { "name": "char_sehun", "kind": "sheet", "prompt": "character reference sheet, front view and side view, plain light grey background, Jung Sehun, around 30, tall thin Korean man, gaunt face, white surgical mask, tired observant eyes with clear white sclera, navy padded jacket over hospital scrub pants, holding a red fire extinguisher, calm clinical posture" },
+    { "name": "char_horyong", "kind": "sheet", "prompt": "character reference sheet, front view, plain light grey background, Ma Horyong, 40s Korean man, huge bodybuilder physique, buzz cut, loud grinning face, sleeveless gym tank top, track pants, gym towel around the neck, scar across one closed eye, fists raised, reckless confidence" },
+    { "name": "char_dad", "kind": "sheet", "prompt": "character reference sheet, front view, plain light grey background, muted sepia tint, Korean man in his late 50s, old boxing trainer, weathered stern face, grey crew cut, faded windbreaker, focus mitts tucked under one arm, rough hands" },
+
+    { "name": "bg_dawn", "kind": "bg", "prompt": "wide establishing shot, Korean high-rise apartment complex at 5:30 am before sunrise, dense sea fog rolling low between the buildings, a few warm lit windows, empty guard booth with its light on, distant red ambulance siren glow at the main gate, dark sea on the horizon" },
+    { "name": "bg_mirror", "kind": "bg", "prompt": "small Korean apartment bathroom, fogged mirror with one palm-wiped clear streak, black leather eyepatch and a red ribbon on the sink edge, cold white light, steam" },
+    { "name": "bg_door", "kind": "bg", "prompt": "inside view of a Korean apartment front door, heavy grey steel door, digital door lock with lever handle, small peephole, shoe rack, pink backpack by the door, dim morning light, tension" },
+    { "name": "bg_peep", "kind": "bg", "prompt": "fisheye peephole view of an apartment hallway, circular vignette, pure black outside the circle, a man in a blood-soaked white shirt standing very close to the door, behind him a figure crawling on all fours near the elevator" },
+    { "name": "bg_peep1501", "kind": "bg", "prompt": "fisheye peephole view of an apartment hallway, circular vignette, pure black outside the circle, a man in a business suit crouched on all fours near the elevator, licking a pool of blood on the floor, a staff ID card with a broken blue lanyard lying beside him" },
+    { "name": "bg_hall", "kind": "bg", "prompt": "15th floor apartment hallway in Korea, elevator doors, three steel unit doors, emergency stairwell fire door with wire-glass window, fire hydrant cabinet, smeared blood near the elevator, flickering fluorescent light" },
+    { "name": "bg_stairs", "kind": "bg", "prompt": "narrow apartment emergency stairwell landing, concrete steps, metal handrail, green emergency exit sign light, deep shadows, claustrophobic" },
+    { "name": "bg_stairsDown", "kind": "bg", "prompt": "top-down view through the gap of a spiral apartment stairwell, many floors descending into darkness, pale hands gripping the railings on lower floors climbing upward, green emergency light" },
+    { "name": "bg_kitchen", "kind": "bg", "prompt": "small bachelor apartment kitchen, open refrigerator glowing white, almost empty shelves with six bottles of water, one shriveled lemon, two packets of pickled radish, a salt tub, stack of delivery food containers on the counter" },
+    { "name": "bg_night", "kind": "bg", "prompt": "dark Korean apartment living room at night, lights off, city faintly glowing through balcony windows, half-drunk water bottle and a torn snack packet on the floor" },
+    { "name": "bg_firedoor", "kind": "bg", "prompt": "close view of a steel fire door with a small wire-mesh glass window, a grey necktie tied tightly between the door handle and a fire hydrant cabinet handle, blue pre-dawn light, a blurred silhouette of a masked face behind the glass" },
+    { "name": "bg_r1208", "kind": "bg", "prompt": "sparse tidy apartment dining room, medical textbooks on the table, an unfinished seascape jigsaw puzzle with the horizon section missing, two instant cup noodles steaming, open first aid kit" },
+    { "name": "bg_balcony", "kind": "bg", "prompt": "apartment balcony, laundry drying rack pushed aside revealing a thin gypsum board partition wall to the next unit, grey morning, view of other apartment towers" },
+    { "name": "bg_b1503", "kind": "bg", "prompt": "broken gypsum board wall with a fist-sized hole, through it a lush balcony full of green potted plants like a small forest, soft daylight, dust in the air" },
+    { "name": "bg_r1503", "kind": "bg", "prompt": "warm lived-in Korean apartment living room, wide view left to right: seven monstera pots with white name stakes, a watering can and a cat food bag on the left, cork board with photos and sticky notes center-left, refrigerator in the center, kitchen cupboard center-right, doorway to a small study with a desk on the right" },
+    { "name": "bg_desk", "kind": "bg", "prompt": "small study room, bookshelf of worn exam books, desk with a white envelope and a small name tag on top, desk lamp, quiet afternoon light" },
+    { "name": "bg_closet", "kind": "bg", "prompt": "open wardrobe, at the very back a black tracksuit in a plastic cover, a folded navy school uniform being sealed in a plastic bag, dim light" },
+    { "name": "bg_dining", "kind": "bg", "prompt": "small dining table, two bowls of rice, one container of soy-braised beef with five quail eggs, masking tape label on the lid, chopsticks, dim warm light, quiet moment" },
+
+    { "name": "fight_hall", "kind": "fight", "prompt": "view down a narrow apartment hallway toward the elevator, steel doors on both sides, fluorescent light" },
+    { "name": "fight_stairs", "kind": "fight", "prompt": "on a stairwell landing looking down the steps, metal railing on the right, concrete wall on the left, green emergency light" },
+    { "name": "fight_room", "kind": "fight", "prompt": "empty dark living room at 4 am, furniture pushed to the walls, faint blue window light" },
+    { "name": "fight_wall", "kind": "fight", "prompt": "facing a thin gypsum board balcony partition wall at close range, laundry rack beside it" },
+
+    { "name": "enemy_suit1501", "kind": "enemy", "prompt": "infected Korean office worker in a grey business suit, grey necktie, chin and mouth soaked red, whites of the eyes completely blood red with pinpoint pupils, hunched lunging posture, hands reaching forward" },
+    { "name": "enemy_suitStairs", "kind": "enemy", "prompt": "infected man in a navy suit, necktie twisted around to his back, crouched about to pounce, blood red eyes" },
+    { "name": "enemy_apron", "kind": "enemy", "prompt": "infected middle-aged Korean woman in a kitchen apron, a single yellow rubber glove on her left hand, house clothes, wet hair, grabbing forward with both arms, blood red eyes" },
+    { "name": "enemy_doyun", "kind": "enemy", "prompt": "infected gentle-faced Korean man in his early 30s, white dress shirt soaked dark red from the torn left side of the neck, broken blue lanyard on the neck, blood red eyes searching, face still recognizably gentle, tragic not monstrous" },
+    { "name": "enemy_normal", "kind": "enemy", "prompt": "infected Korean apartment resident in pajamas and cardigan, blood red eyes, open mouth, arms raised" },
+    { "name": "enemy_crawler", "kind": "enemy", "prompt": "infected person crawling low on all fours toward the viewer, head at chest height, long messy hair, torn clothes, blood red eyes" },
+    { "name": "enemy_horyong", "kind": "enemy", "prompt": "infected massive Korean bodybuilder in a torn gym tank top, one eye scarred shut, the other blood red, veins bulging, towel around the neck, terrifying bulk" },
+
+    { "name": "hud_fist_right", "kind": "hud", "prompt": "first-person view of a woman's right fist and forearm rising from the bottom right edge of the frame, wrapped in white compression bandage over the knuckles and wrist, navy school uniform sleeve, boxing guard position" },
+    { "name": "hud_fist_left", "kind": "hud", "prompt": "first-person view of a woman's left fist and forearm rising from the bottom left edge of the frame, wrapped in white compression bandage over the knuckles and wrist, navy school uniform sleeve, boxing guard position" },
+
+    { "name": "item_idcard", "kind": "item", "prompt": "staff ID card with an awkwardly smiling man's photo, broken blue lanyard, a smear of blood on the corner" },
+    { "name": "item_food1503", "kind": "item", "prompt": "small pile of instant ramen packets, canned tuna, canned ham, microwave rice bowls and a container of soy-braised beef" },
+    { "name": "item_nametag", "kind": "item", "prompt": "small rectangular school name tag pin, blank white plate, navy border" },
+    { "name": "item_letter", "kind": "item", "prompt": "opened white envelope with a handwritten letter folded half out, illegible neat handwriting" },
+    { "name": "item_bandage", "kind": "item", "prompt": "roll of white compression bandage, end partially unrolled" },
+
+    { "name": "title_key", "kind": "title", "prompt": "key art, Korean woman boxer standing in a dark apartment emergency stairwell, seen from slightly below, black tracksuit, black leather eyepatch over her left eye, white-bandaged fists, ID card with a blue lanyard in her chest pocket, green emergency light from above, below her the spiral stairwell full of reaching infected hands, dust haze, determined still expression, composition weighted to the right, empty dark space on the left third" },
+    { "name": "title_key_ch1", "kind": "title", "prompt": "key art, Korean woman boxer standing in a dark apartment emergency stairwell, seen from slightly below, navy sailor-collar school uniform with a red ribbon, a few blood drops on the sleeve cuff, black leather eyepatch over her left eye, white-bandaged fists, green emergency light from above, reaching infected hands below, composition weighted to the right, empty dark space on the left third" }
+  ]
+}
