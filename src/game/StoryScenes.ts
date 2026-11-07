@@ -70,7 +70,7 @@ export class IntroScene extends Phaser.Scene {
         this.cameras.main.fadeOut(300);
         this.time.delayedCall(320, () => {
           this.scene.launch('combat', {
-            enemy: 'normal', seed: 1501, tutorial: true, forceIntent: 'bite', fromDoor: '1501',
+            enemy: 'normal', seed: 1501, tutorial: true, fromDoor: '1501',
             onDone: () => this.scene.start('corridor', { seed: newSeed() }),
           });
           this.scene.sleep();

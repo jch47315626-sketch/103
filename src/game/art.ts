@@ -78,38 +78,51 @@ export interface ZombieFront {
   root: Phaser.GameObjects.Container;
   head: Phaser.GameObjects.Container;
   eyes: Phaser.GameObjects.Graphics;
+  /** 화면 왼쪽 팔 / 오른쪽 팔 — 어깨가 회전축 */
+  armL: Phaser.GameObjects.Container;
+  armR: Phaser.GameObjects.Container;
 }
 
-/** 정면을 보고 다가오는 감염자. 발이 아니라 화면 아래 몸통 중심이 (0,0). */
+function zArm(scene: Phaser.Scene, x: number, y: number, side: -1 | 1, low: boolean) {
+  const c = scene.add.container(x, y);
+  const g = scene.add.graphics();
+  if (low) {
+    g.lineStyle(26, C.zombie).lineBetween(0, 0, side * 100, 70);
+    g.fillStyle(C.zombie).fillCircle(side * 106, 76, 24);
+  } else {
+    g.lineStyle(30, C.zombie).lineBetween(0, 0, side * 65, 80);
+    g.lineStyle(38, C.zombie).lineBetween(side * 65, 80, side * 95, 150);
+    g.fillStyle(0x8f9b88).fillCircle(side * 98, 156, 30);
+  }
+  c.add(g);
+  return c;
+}
+
+/** 정면을 보고 다가오는 감염자. 화면 아래 몸통 중심이 (0,0). */
 export function drawZombieFront(scene: Phaser.Scene, x: number, y: number, kind: string): ZombieFront {
   const root = scene.add.container(x, y);
   const body = scene.add.graphics();
-  const head = scene.add.container(0, kind === 'crawler' ? -40 : -200);
+  const low = kind === 'crawler';
+  const head = scene.add.container(0, low ? -40 : -200);
   const hg = scene.add.graphics();
   const eyes = scene.add.graphics();
+  let armL: Phaser.GameObjects.Container, armR: Phaser.GameObjects.Container;
 
-  if (kind === 'crawler') {
-    // 바닥에 엎드려 기어 온다: 어깨와 머리가 낮고, 두 팔이 바닥을 짚고 앞으로 뻗는다
+  if (low) {
     body.fillStyle(C.zombieDark).fillEllipse(0, 10, 260, 90);
-    body.lineStyle(26, C.zombie).lineBetween(-90, -10, -190, 60).lineBetween(90, -10, 190, 60);
-    body.fillStyle(C.zombie).fillCircle(-196, 66, 24).fillCircle(196, 66, 24);
+    armL = zArm(scene, -90, -10, -1, true);
+    armR = zArm(scene, 90, -10, 1, true);
   } else {
-    const big = kind === 'horyong' ? 1.15 : 1;
-    root.setScale(big);
+    if (kind === 'horyong') root.setScale(1.15);
     body.fillStyle(C.zombieDark);
     body.beginPath();
     body.moveTo(-120, -130).lineTo(120, -130).lineTo(150, 40).lineTo(-150, 40).closePath().fillPath();
     body.fillStyle(0x6b2a2a, 0.85).fillEllipse(-40, -80, 30, 46).fillEllipse(56, -40, 22, 30);
     body.fillStyle(C.zombie).fillRect(-26, -160, 52, 36);
-    // 카메라 쪽으로 뻗는 두 팔 (가까울수록 크다)
-    body.lineStyle(30, C.zombie).lineBetween(-110, -120, -175, -40);
-    body.lineStyle(38, C.zombie).lineBetween(-175, -40, -205, 30);
-    body.lineStyle(30, C.zombie).lineBetween(110, -120, 170, -50);
-    body.lineStyle(38, C.zombie).lineBetween(170, -50, 200, 20);
-    body.fillStyle(0x8f9b88).fillCircle(-208, 36, 30).fillCircle(203, 26, 30);
+    armL = zArm(scene, -110, -120, -1, false);
+    armR = zArm(scene, 110, -120, 1, false);
   }
 
-  // 머리
   hg.fillStyle(C.zombie).fillEllipse(0, 0, 104, 124);
   hg.fillStyle(0x2b2b26).fillEllipse(0, -46, 110, 46);
   hg.fillStyle(0x2b2b26).fillRect(-54, -50, 14, 50).fillRect(40, -50, 12, 44);
@@ -124,8 +137,8 @@ export function drawZombieFront(scene: Phaser.Scene, x: number, y: number, kind:
     eyes.fillStyle(0xfff3a0).fillCircle(-22, -4, 6).fillCircle(22, -4, 6);
   }
   head.add([hg, eyes]);
-  root.add([body, head]);
-  return { root, head, eyes };
+  root.add([body, head, armL, armR]);
+  return { root, head, eyes, armL, armR };
 }
 
 export interface Gloves {
