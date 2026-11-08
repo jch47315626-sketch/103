@@ -24,9 +24,16 @@ describe('원작 전투', () => {
     for (const id of Object.keys(STORY_FIGHTS)) expect(play(id).outcome, id).toBe('clear');
   });
 
-  it('원작 장면에서 하나라도 놓치면 다시', () => {
-    const s = play('m1501', (n) => n.kind === 'dodge');
+  it('원작 장면은 두 번까지 놓쳐도 이어진다. 세 번째에 다시', () => {
+    expect(play('floor11', (n) => n.label === '쳤다').outcome).toBe('clear'); // 2번 놓침
+    const s = play('floor11', (n) => n.kind === 'dodge' && n.label !== '위빙 ↓');
+    expect(s.outcome).toBe('fail'); // 들어갔다·빠졌다 4번 놓침
+  });
+
+  it('결정타를 놓치면 바로 다시', () => {
+    const s = play('m1501', (n) => !!n.finisher);
     expect(s.outcome).toBe('fail');
+    expect(play('m1501', (n) => n.kind === 'dodge').outcome).toBe('clear');
   });
 
   it('섀도복싱은 연습이라 놓쳐도 끝까지 간다', () => {

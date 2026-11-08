@@ -102,8 +102,10 @@ export const RHYTHM_ENEMIES: Record<string, RhythmEnemy> = {
 
 export const RHYTHM = {
   countIn: 4, // 노트 전에 4박 카운트
-  perfectMs: 60,
-  goodMs: 120,
+  perfectMs: 90,
+  goodMs: 180,
+  /** 원작 장면 싸움에서 버틸 수 있는 놓침 수 (결정타·클린치는 예외) */
+  storyLives: 3,
   missesPerNoise: 3,
   staggerBeats: 4,
   noise: { swingHit: 2, biteHit: 1, grabHit: 1, timeout: 3 },
@@ -131,6 +133,8 @@ export interface RhythmState {
   extraNoise: number;
   grabbed: boolean;
   outcome: 'ongoing' | 'ko' | 'timeout' | 'clear' | 'fail';
+  /** 원작 장면 싸움: 남은 기회. 0이 되면 다시 */
+  lives: number;
   events: RhythmEvent[];
 }
 
@@ -232,7 +236,7 @@ export function startRhythm(enemyId: string, seed: number, opts: { easy?: boolea
   const enemy = RHYTHM_ENEMIES[enemyId];
   const bpm = opts.easy ? 84 : enemy.bpm;
   return {
-    mode: 'battle', enemy, bpm,
+    mode: 'battle', enemy, bpm, lives: RHYTHM.storyLives,
     notes: buildChart(enemy, seed, opts),
     totalBeats: RHYTHM.countIn + enemy.measures * 4 + 1,
     headHp: enemy.headHp, poise: enemy.poise, staggerUntil: -1,
@@ -258,15 +262,19 @@ function keyMatches(n: Note, key: string): boolean {
 
 function isDodgeKey(key: string) { return key in DODGE_KEYS; }
 
-function applyMiss(s: RhythmState, n: Note) {
+function applyMiss(s: RhythmState, n: Note, fatal = false) {
   n.judge = 'miss';
   s.misses += 1;
   s.combo = 0;
   if (s.mode !== 'battle') {
     s.events.push({ t: 'judge', note: n, judge: 'miss', dmg: 0, counter: false });
     if (s.mode === 'story') {
-      s.outcome = 'fail';
-      s.events.push({ t: 'fail', note: n });
+      // 몇 번은 버틴다. 단 결정타·클린치를 놓치면 그 장면이 성립하지 않는다
+      s.lives = fatal || n.finisher || n.hold ? 0 : s.lives - 1;
+      if (s.lives <= 0) {
+        s.outcome = 'fail';
+        s.events.push({ t: 'fail', note: n });
+      }
     }
     return;
   }
@@ -387,7 +395,7 @@ export function release(s: RhythmState, rawKey: string, beat: number) {
   for (const n of s.notes) {
     if (!n.holding || n.judge || !keyMatches(n, key)) continue;
     n.holding = false;
-    if (beat < n.beat + n.hold! - 0.25) applyMiss(s, n);
+    if (beat < n.beat + n.hold! - 0.25) applyMiss(s, n, true);
     else { applyHit(s, n, n.holdJudge ?? 'good', beat); s.events.push({ t: 'holdDone', note: n }); }
   }
 }

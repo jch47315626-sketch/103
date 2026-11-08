@@ -28,9 +28,9 @@ describe('리듬 전투 규칙', () => {
     const [a, b, c] = s.notes;
     hit(s, keyOf(a), a.beat);
     expect(a.judge).toBe('perfect');
-    hit(s, keyOf(b), b.beat + 90 / msPerBeat(s.bpm));
+    hit(s, keyOf(b), b.beat + 140 / msPerBeat(s.bpm));
     expect(b.judge).toBe('good');
-    hit(s, keyOf(c), c.beat - 300 / msPerBeat(s.bpm));
+    hit(s, keyOf(c), c.beat - 400 / msPerBeat(s.bpm));
     expect(c.judge).toBeUndefined();
     advance(s, c.beat + 1);
     expect(c.judge).toBe('miss');

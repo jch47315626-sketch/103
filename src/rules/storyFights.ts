@@ -150,6 +150,6 @@ export function startStoryFight(id: string): RhythmState {
     headHp: 1, poise: 99, staggerUntil: -1,
     combo: 0, maxCombo: 0, perfects: 0, goods: 0, misses: 0,
     hitsTaken: 0, bites: 0, extraNoise: 0, grabbed: false,
-    outcome: 'ongoing', events: [],
+    outcome: 'ongoing', lives: RHYTHM.storyLives, events: [],
   };
 }

@@ -490,7 +490,8 @@ export class CombatScene extends Phaser.Scene {
     pr.fillStyle(0x2a2d31).fillRect(bx, 26, bw, 8);
     pr.fillStyle(C.orange).fillRect(bx, 26, bw * Phaser.Math.Clamp(b / s.totalBeats, 0, 1), 8);
     if (this.fight) {
-      this.ui.counts.setText(`PERFECT ${s.perfects}\nGOOD ${s.goods}\nMISS ${s.misses}${this.fight.mode === 'story' ? '  (놓치면 다시)' : ''}`);
+      const lives = this.fight.mode === 'story' ? `\n버틸 수 있음 ${'●'.repeat(Math.max(0, s.lives))}${'○'.repeat(Math.max(0, 3 - s.lives))}` : '';
+      this.ui.counts.setText(`PERFECT ${s.perfects}  GOOD ${s.goods}  MISS ${s.misses}${lives}`);
       return;
     }
     const g = this.ui.hp;
@@ -588,7 +589,14 @@ export class CombatScene extends Phaser.Scene {
         const label = ev.judge === 'perfect' ? 'PERFECT' : ev.judge === 'good' ? 'GOOD' : 'MISS';
         const col = ev.judge === 'perfect' ? '#ffd23f' : ev.judge === 'good' ? HEX(C.blue) : '#888';
         this.float(label, pos.x, pos.y - 20, col, ev.judge === 'perfect' ? 24 : 20);
-        if (ev.judge === 'miss') break;
+        if (ev.judge === 'miss') {
+          // 원작 장면에서 놓치면 한 번 맞는다 (기회 하나가 준다)
+          if (this.fight?.mode === 'story' && this.s.outcome === 'ongoing') {
+            if (n.kind === 'dodge') { sfx.punch(); cam.flash(160, 229, 72, 77); cam.shake(160, 0.01); }
+            this.float(`기회 ${this.s.lives}`, CX, 330, '#ff9b9b', 20);
+          }
+          break;
+        }
         if (n.kind === 'dodge') { sfx.whoosh(); this.resetPose(); break; }
         if (!z) { if (this.fight?.bg === 'wall') this.wallBreak(); else sfx.whoosh(); break; }
         if (n.row === 2) sfx.heavy(); else sfx.punch();
