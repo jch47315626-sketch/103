@@ -10,7 +10,9 @@ tools/comfy/README.md 의 "내 PC의 Claude Code에게 맡기기" 순서대로 �
 1. git fetch 하고 claude/amazing-brahmagupta-ww97bn 브랜치로 바꿔.
 2. ComfyUI가 http://127.0.0.1:8188 에서 켜져 있는지 확인해. 꺼져 있으면 이 PC에서 ComfyUI가 어디 있는지 찾아서 켜 줘. 새로 설치나 모델 내려받기가 필요하면 하기 전에 나한테 물어봐.
 3. pip install pillow "rembg[cpu]"
-4. python tools/comfy/generate.py --dry-run 으로 체크포인트 목록을 보고, 웹툰·애니 화풍에 맞는 SDXL 모델을 골라 줘. 여러 개면 나한테 물어봐.
+4. 모델: ComfyUI/models/checkpoints 에 Animagine XL 4.0 이 없으면, 받아도 되는지 나한테 묻고 https://huggingface.co/CagliostroLab/Animagine-XL-4.0 의 Files 탭에서 .safetensors 체크포인트(약 7GB)를 받아 그 폴더에 넣어 줘. 파일이 여러 개면 모델 카드에서 권장하는 것으로.
+   모델 카드의 권장 프롬프트 형식(품질 태그, 권장 설정)을 읽고, 필요하면 --steps --cfg --sampler 를 거기에 맞춰.
+   그다음 python tools/comfy/generate.py --dry-run 으로 체크포인트 목록에 보이는지 확인해.
 5. 시험으로 3장만: python tools/comfy/generate.py --ckpt <모델> --set ch1-4 --only bg_dawn --only cg_door_handle --only enemy_suit1501 --format webp
    나온 그림을 보여 주고, 내가 괜찮다고 하면 6으로.
 6. 전부: python tools/comfy/generate.py --ckpt <모델> --set ch1-4 --skip-existing --format webp
@@ -18,6 +20,8 @@ tools/comfy/README.md 의 "내 PC의 Claude Code에게 맡기기" 순서대로 �
 8. public/img 와 docs/ch1-4-images.md 를 커밋해서 같은 브랜치에 푸시해 줘.
 ```
 
+- 모델 선택 이유: Animagine XL 4.0 은 모델 카드에 SDXL 의 CreativeML Open RAIL++-M 라이선스를 **수정·추가 제한 없이** 그대로 따른다고 적혀 있어, 펀딩·판매용 그림에 쓰기 가장 분명하다. DreamShaper XL 등 다른 인기 모델은 상업적 이용 조건이 불분명하거나 막혀 있는 경우가 있어 뺐다. 받기 전에 모델 카드의 라이선스를 한 번 더 확인할 것.
+- Animagine 은 애니 화풍이라 반실사 웹툰보다 그림이 만화 쪽으로 기운다. 웹툰 느낌을 더하려면 civitai.com 에서 "manhwa", "webtoon" 으로 SDXL LoRA 를 찾아 --lora 이름:0.7 로 얹는다 (LoRA 라이선스도 따로 확인).
 - 시간: GPU에 따라 한 장에 수십 초, 71장이면 대략 30분~1시간.
 - `--set ch1-4`는 `src/game/imageSlots.json`의 그림 자리마다 한 장을 뽑는다. `prompts.json`에 같은 그림이 있으면 그 SDXL 프롬프트를, 없으면(이벤트 그림·서 있는 그림 등) `docs/chatgpt-prompts.md`의 장면 설명을 쓴다.
 - 싸움 상대·서 있는 그림·주먹·아이콘은 rembg 로 배경을 지운다. 지워지지 않은 게 있으면 그 그림만 다시 뽑거나 손으로 지운다.
