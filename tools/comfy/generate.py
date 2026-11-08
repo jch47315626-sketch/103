@@ -47,7 +47,9 @@ def load_jobs(cfg: dict, with_variants: bool) -> list[dict]:
 
 
 def full_prompt(cfg: dict, job: dict) -> str:
-    parts = [cfg['style'], job['prompt'], job['kindcfg'].get('suffix', '')]
+    kind = job['kindcfg']
+    suffix = kind.get('suffixPeople', kind.get('suffix', '')) if job.get('people') else kind.get('suffix', '')
+    parts = [cfg['style'], job['prompt'], suffix]
     return ', '.join(p for p in parts if p)
 
 
