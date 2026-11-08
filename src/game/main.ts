@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { MapScene } from '../levels/MapScene';
 import { StoryScene } from '../story/StoryScene';
 import { CombatScene } from './CombatScene';
 import { TitleScene } from './TitleScene';
@@ -12,7 +13,7 @@ const start = () => {
     height: H,
     backgroundColor: '#14161a',
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [TitleScene, StoryScene, CombatScene],
+    scene: [TitleScene, MapScene, StoryScene, CombatScene],
   });
   (window as unknown as { __g: Phaser.Game }).__g = game; // 자동 플레이 테스트용
 };

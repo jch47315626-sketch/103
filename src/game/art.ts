@@ -17,23 +17,39 @@ function arm(scene: Phaser.Scene, x: number, y: number, len: number, lift: numbe
   return a;
 }
 
-export function drawTaeri(scene: Phaser.Scene, x: number, y: number, scale = 1): Taeri {
+export interface TaeriLook { outfit?: 'casual' | 'uni' | 'track'; patch?: boolean }
+
+export function drawTaeri(scene: Phaser.Scene, x: number, y: number, scale = 1, look: TaeriLook = {}): Taeri {
+  const outfit = look.outfit ?? 'track';
+  const patch = look.patch ?? true;
+  const top = outfit === 'casual' ? 0x8a8f98 : outfit === 'uni' ? 0x1f2a44 : 0x15161a;
   const root = scene.add.container(x, y).setScale(scale);
   const g = scene.add.graphics();
-  // 다리
-  g.fillStyle(0x23262b, 1).fillRect(-14, -52, 10, 50).fillRect(4, -52, 10, 50);
+  // 다리 (교복은 치마 아래 맨다리)
+  if (outfit === 'uni') {
+    g.fillStyle(C.skin, 1).fillRect(-12, -40, 9, 38).fillRect(4, -40, 9, 38);
+    g.fillStyle(0x1f2a44, 1).fillRect(-17, -56, 34, 18); // 주름치마
+    g.fillStyle(0x2c3a5c, 1).fillRect(-14, -56, 3, 18).fillRect(-2, -56, 3, 18).fillRect(10, -56, 3, 18);
+  } else {
+    g.fillStyle(0x23262b, 1).fillRect(-14, -52, 10, 50).fillRect(4, -52, 10, 50);
+  }
   g.fillStyle(0xdedede, 1).fillRect(-16, -6, 15, 6).fillRect(3, -6, 15, 6);
-  // 몸통 (남색 점퍼 + 빨간 TAERI 자수 줄)
-  g.fillStyle(C.jacket, 1).fillRoundedRect(-18, -104, 36, 56, 6);
-  g.fillStyle(C.red, 1).fillRect(-18, -80, 36, 4);
+  // 몸통
+  g.fillStyle(top, 1).fillRoundedRect(-18, -104, 36, 52, 6);
+  if (outfit === 'uni') {
+    g.fillStyle(0xf2f2f0, 1).fillTriangle(-14, -104, 14, -104, 0, -90); // 세라 카라
+    g.fillStyle(C.red, 1).fillTriangle(-6, -92, 6, -92, 0, -82); // 붉은 리본
+  } else if (outfit === 'track') {
+    g.fillStyle(C.red, 1).fillRect(-18, -80, 36, 4); // TAERI 자수 줄
+  }
   // 머리, 포니테일
   g.fillStyle(0x15151a, 1).fillCircle(-2, -118, 16).fillEllipse(-20, -112, 12, 26);
   g.fillStyle(C.skin, 1).fillCircle(3, -115, 13);
   g.fillStyle(0x15151a, 1).fillRect(-12, -132, 24, 9);
   g.fillStyle(0x15151a, 1).fillCircle(10, -116, 2);
-  g.lineStyle(2, 0x0a0a0a, 1).lineBetween(-12, -122, 14, -118); // 안대 끈 (왼쪽 눈은 반대편)
-  const rear = arm(scene, -4, -94, 26, -18, 0x18213a);
-  const lead = arm(scene, 6, -92, 30, -10, C.jacket);
+  if (patch) g.lineStyle(2, 0x0a0a0a, 1).lineBetween(-12, -122, 14, -118); // 안대 끈 (왼쪽 눈은 반대편)
+  const rear = arm(scene, -4, -94, 26, -18, Phaser.Display.Color.ValueToColor(top).darken(20).color);
+  const lead = arm(scene, 6, -92, 30, -10, top);
   root.add([rear, g, lead]);
   return { root, lead, rear };
 }

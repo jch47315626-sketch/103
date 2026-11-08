@@ -55,7 +55,8 @@ export class TitleScene extends Phaser.Scene {
       unlockAudio();
       sfx.bell();
       this.cameras.main.fadeOut(500);
-      this.time.delayedCall(520, () => this.scene.start('story', { chapter }));
+      // 제1화는 직접 돌아다니는 맵으로, 나머지는 아직 이야기 장면으로
+      this.time.delayedCall(520, () => (chapter === 0 ? this.scene.start('map', { level: 'ch1' }) : this.scene.start('story', { chapter })));
     };
     let y = 260;
     button(this, 190, y, 260, 44, `처음부터 — 제1화 「${CHAPTERS[0].name}」`, () => start(0), 'primary');
