@@ -147,6 +147,28 @@
             "bg_dining"
           ],
           "use": "4화 장조림 식탁"
+        },
+        {
+          "slot": "bg:hall11",
+          "files": [
+            "bg_floor11",
+            "bg_hall_generic"
+          ],
+          "use": "5화 11층 복도 — 원판으로 괸 방화문, 호룡"
+        },
+        {
+          "slot": "bg:gym1114",
+          "files": [
+            "bg_1114"
+          ],
+          "use": "5화 1114호 홈짐, 1113호 할머니"
+        },
+        {
+          "slot": "bg:gymNight",
+          "files": [
+            "bg_1114"
+          ],
+          "use": "5화 새벽 세 시 1114호 (어둡게 덮는다)"
         }
       ]
     },

@@ -6,6 +6,8 @@ export interface StoryFight {
   title: string;
   /** 감염자 그림 (art.ts의 LOOKS) — 없으면 상대 없음 */
   look?: string;
+  /** 여럿과 싸울 때: down 노트마다 다음 상대로 바뀐다 (첫 상대는 look) */
+  looks?: string[];
   bg: 'hall' | 'stairs' | 'room' | 'wall';
   bpm: number;
   mode: RhythmMode;
@@ -97,6 +99,32 @@ export const STORY_FIGHTS: Record<string, StoryFight> = {
       { beat: C0 + 9.4, text: '세훈: “놔요. 그렇게 오래 못 버팁니다.”' },
       { beat: C0 + 10.8, text: '“……놓으면 당신이 칠 거잖아요.”' },
       { beat: C0 + 12, text: '발이 미끄러졌다. 팔을 풀었다. 주먹이 아니라, 손바닥으로—' },
+    ],
+  },
+
+  // 제5화 — 11층 복도. 바벨 봉으로 버티는 호룡, 치고 빠지는 태리. "들어갔다. 쳤다. 빠졌다."
+  floor11: {
+    id: 'floor11', title: '11층 복도 — 깔짝대기', look: 'hiker', looks: ['pajama', 'worker', 'hiker', 'pajama', 'worker', 'suitStairs'],
+    bg: 'hall', bpm: 96, mode: 'story', ending: 'ko',
+    intro: '덩어리 맨 뒤에 있던 것 하나가 고개를 돌렸다. 등산복 차림. — 태리는 먼저 들어갔다. 언제나 왼쪽은 벽.',
+    notes: [
+      D(0, ['duck'], '위빙 ↓'),
+      P(1, 'w', '오른손 — 턱 끝', { down: true }),
+      P(2.5, 'e', '훅 — 관자놀이', { down: true }),
+      P(3.5, 'x', '어퍼컷 — 턱 밑', { down: true }),
+      D(5, ['right'], '→ 들어갔다'), P(6, 'w', '쳤다', { down: true }), D(7, ['left'], '← 빠졌다'),
+      D(8, ['right'], '→ 들어갔다'), P(9, 'q', '쳤다', { down: true }), D(10, ['left'], '← 빠졌다'),
+      D(11, ['duck'], '위빙 ↓'), P(11.5, 'x', '어퍼', { down: true }),
+      P(13, 's', '문턱 아래 — 내려꽂는 오른손', { finisher: true }),
+    ],
+    lines: [
+      { beat: C0 + 1.2, text: '세 번 주먹을 내는 동안, 그녀의 몸에 닿은 것은 하나도 없었다.' },
+      { beat: C0 + 3.8, text: '호룡: “어? 뭐야. 누구야?”' },
+      { beat: C0 + 5.2, text: '돌아서는 순간, 목이 꺾이는 순간, 중심이 한쪽 발에 실리는 순간.' },
+      { beat: C0 + 7.2, text: '호룡: “……강태리? 외눈의 폭격기? 와, 씨, 진짜네!”' },
+      { beat: C0 + 9.2, text: '태리: “소리 좀 줄여요. 계단으로 계속 올라와요.”' },
+      { beat: C0 + 10.4, text: '호룡: “올라오라 그래! 다 와서 줄 서라 그래! ……야, 강태리, 너 몇 개 했어?”' },
+      { beat: C0 + 12, text: '계단실에서 올라온 첫 번째 것이 방화문 문턱에 손을 짚었다. 턱이 문턱보다 아래 있는 순간.' },
     ],
   },
 

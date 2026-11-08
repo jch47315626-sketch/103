@@ -33,6 +33,8 @@ const colX = (c: number) => CX + (c - 1) * LANE;
 const ROW_COLOR = [C.red, C.blue, C.orange];
 const ROW_NAME = ['머리', '몸통', '어퍼'];
 const BASS = [110, 87.31, 130.81, 98];
+/** 놓침 판정 유예(초) */
+const MISS_GRACE = 0.15;
 const BLIND_W = 330; // 안대 쪽 어둠의 폭
 /** 피하기 원의 위치: 왼쪽에서만 오는 공격은 안 보이는 쪽에 뜬다 */
 const dodgePos = (n: Note) => ((n.dodge?.length === 1 && n.dodge[0] === 'left') ? { x: 135, y: 250 } : { x: W - 135, y: 250 });
@@ -59,6 +61,7 @@ export class CombatScene extends Phaser.Scene {
   private gloves!: Gloves;
   private views = new Map<number, NoteView>();
   private headCol: Col = 1;
+  private lookIdx = 0;
   private ui!: {
     hp: Phaser.GameObjects.Graphics;
     poise: Phaser.GameObjects.Graphics;
@@ -88,6 +91,7 @@ export class CombatScene extends Phaser.Scene {
     this.views = new Map();
     this.cued = new Set();
     this.headCol = 1;
+    this.lookIdx = 0;
     this.zombie = undefined;
   }
 
@@ -113,9 +117,7 @@ export class CombatScene extends Phaser.Scene {
     if (kind) {
       const rootY = kind === 'horyong' ? 385 : 360;
       this.zRoot = { x: 0, y: rootY - PANEL / 2 };
-      const img = slotKey(this, `enemy:${kind}`);
-      this.zombie = img ? imageZombie(this, 0, this.zRoot.y, img, !!e.low) : drawZombieFront(this, 0, this.zRoot.y, kind);
-      this.world.add(this.zombie.root);
+      this.zombie = this.makeZombie(kind, !!e.low);
     }
 
     const outfit = this.d.outfit ?? (this.fight ? 'uni' : 'track');
@@ -134,18 +136,49 @@ export class CombatScene extends Phaser.Scene {
     this.start = audioRawNow() + 0.6;
     this.say(this.fight ? this.fight.intro : `${e.name} — ${e.desc}`);
 
-    this.input.keyboard!.on('keydown', (ev: KeyboardEvent) => { if (!ev.repeat) this.onKey(ev.key); });
-    this.input.keyboard!.on('keyup', (ev: KeyboardEvent) => this.onKeyUp(ev.key));
+    // 판정은 키를 누른 순간(ev.timeStamp) 기준: 화면이 잠깐 멈춰 처리가 늦어도 손해 보지 않는다
+    this.input.keyboard!.on('keydown', (ev: KeyboardEvent) => { if (!ev.repeat) this.onKey(ev.key, ev.timeStamp); });
+    this.input.keyboard!.on('keyup', (ev: KeyboardEvent) => this.onKeyUp(ev.key, ev.timeStamp));
+  }
+
+  private makeZombie(kind: string, low: boolean): ZombieFront {
+    const img = slotKey(this, `enemy:${kind}`);
+    const z = img ? imageZombie(this, 0, this.zRoot.y, img, low) : drawZombieFront(this, 0, this.zRoot.y, kind);
+    this.world.add(z.root);
+    return z;
+  }
+
+  /** 여럿과 싸우는 장면: 지금 상대가 쓰러지고 다음 상대가 들어온다 */
+  private nextEnemy() {
+    const old = this.zombie;
+    const looks = this.fight?.looks;
+    if (!old || !looks?.length) return;
+    sfx.heavy();
+    this.cameras.main.shake(140, 0.01);
+    this.tweens.killTweensOf([old.head, old.root]);
+    this.tweens.add({ targets: old.root, y: old.root.y + 260, scale: 0.6, angle: (this.lookIdx % 2 ? -1 : 1) * 14, alpha: 0, duration: 420, ease: 'Quad.In', onComplete: () => old.root.destroy() });
+    const kind = looks[this.lookIdx++ % looks.length];
+    this.headCol = 1;
+    const z = this.makeZombie(kind, kind === 'suitStairs');
+    z.root.setScale(0.55 * this.rootScale).setAlpha(0);
+    this.tweens.add({ targets: z.root, scale: this.rootScale, alpha: 1, duration: 260, delay: 140, ease: 'Back.Out' });
+    this.zombie = z;
   }
 
   private beatNow() {
     return (audioRawNow() - audioLatency() - this.start) / this.spb;
   }
 
-  private onKey(raw: string) {
+  /** 박 단위 시각. at = 키를 누른 순간(performance.now 기준 ms), 없으면 지금 */
+  private beatAt(at?: number) {
+    const late = at === undefined ? 0 : Math.max(0, performance.now() - at) / 1000;
+    return this.beatNow() - late / this.spb;
+  }
+
+  private onKey(raw: string, at?: number) {
     if (this.finished) return;
     const k = raw.toLowerCase();
-    const b = this.beatNow();
+    const b = this.beatAt(at);
     if (k in KEY_GRID) {
       this.flashPad(k);
       const [row, col] = KEY_GRID[k];
@@ -156,9 +189,9 @@ export class CombatScene extends Phaser.Scene {
     hit(this.s, k, b);
   }
 
-  private onKeyUp(raw: string) {
+  private onKeyUp(raw: string, at?: number) {
     if (this.finished) return;
-    release(this.s, raw, this.beatNow());
+    release(this.s, raw, this.beatAt(at));
   }
 
   // ---------- 배경 ----------
@@ -361,7 +394,8 @@ export class CombatScene extends Phaser.Scene {
     if (this.finished) return;
     this.scheduleMusic();
     const b = this.beatNow();
-    advance(this.s, b);
+    // 놓침 판정은 조금 늦게: 화면이 버벅여 키 처리가 늦게 와도, 누른 시각이 맞으면 맞은 걸로 친다
+    advance(this.s, b - MISS_GRACE / this.spb);
     for (const ev of takeEvents(this.s)) this.onEvent(ev);
 
     const bi = Math.floor(b);
@@ -587,6 +621,9 @@ export class CombatScene extends Phaser.Scene {
         if (z) { this.tweens.killTweensOf(z.head); z.head.setAngle(0); }
         this.tweens.add({ targets: this.gloves.lead, x: this.gloves.leadHome.x, y: this.gloves.leadHome.y, angle: 8, duration: 160 });
         this.tweens.add({ targets: this.gloves.rear, x: this.gloves.rearHome.x, y: this.gloves.rearHome.y, angle: -8, duration: 160 });
+        break;
+      case 'down':
+        this.nextEnemy();
         break;
       case 'noEffect':
         this.float(ev.text, CX, 300, '#ff9b9b', 22);

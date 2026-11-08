@@ -10,7 +10,11 @@ export function drawBg(scene: Phaser.Scene, layer: Phaser.GameObjects.Container,
   layer.removeAll(true);
   // public/img 에 그림이 있으면 그걸 쓴다
   const img = slotKey(scene, `bg:${bg}`);
-  if (img) { layer.add(coverImage(scene, img, 0, 0, W, AREA_H)); return; }
+  if (img) {
+    layer.add(coverImage(scene, img, 0, 0, W, AREA_H));
+    if (bg === 'gymNight') layer.add(scene.add.rectangle(0, 0, W, AREA_H, 0x05060a, 0.75).setOrigin(0)); // 새벽 세 시
+    return;
+  }
   const g = scene.add.graphics();
   layer.add(g);
   const add = (o: Phaser.GameObjects.GameObject) => layer.add(o);
@@ -263,6 +267,82 @@ export function drawBg(scene: Phaser.Scene, layer: Phaser.GameObjects.Container,
       g.fillStyle(0x0d0e10).fillRect(330, 70, 60, 180).fillRect(570, 70, 60, 180);
       add(text(scene, 480, 120, 'TAERI', 18, '#e5484d', { fontStyle: '700' }).setOrigin(0.5));
       g.lineStyle(3, 0x777777).lineBetween(400, 50, 560, 50).lineBetween(480, 30, 480, 50);
+      break;
+    }
+
+    case 'hall11': {
+      // 11층 복도: 문 아래 괴어 둔 원판, 한 덩어리로 꿈틀거리는 것들, 맨 끝의 거인
+      g.fillStyle(C.concrete).fillRect(0, 0, W, 300);
+      g.fillStyle(C.floor).fillRect(0, 300, W, 80);
+      g.fillStyle(C.doorDark).fillRect(20, 110, 110, 190);
+      g.fillStyle(0x0b0c0e).fillRect(30, 120, 90, 180);
+      g.fillStyle(0x111111).fillCircle(120, 300, 26);
+      g.fillStyle(0x333333).fillCircle(120, 300, 8);
+      for (let i = 0; i < 16; i++) {
+        const x = 300 + (i % 8) * 52 + (i > 7 ? 26 : 0), y = i > 7 ? 175 : 160;
+        g.fillStyle(0x2a2e2a, 0.95).fillRoundedRect(x - 18, y, 36, 140, 12);
+        g.fillStyle(0x3a3f38).fillCircle(x, y - 12, 15);
+        g.fillStyle(0xb31b1b).fillCircle(x - 5, y - 13, 2).fillCircle(x + 5, y - 13, 2);
+      }
+      // 호룡: 민소매, 산 같은 어깨, 가로로 든 바벨 봉
+      g.fillStyle(0x5a5f66).fillRoundedRect(790, 90, 110, 160, 20);
+      g.fillStyle(0xc8a68a).fillCircle(845, 66, 26).fillRoundedRect(760, 100, 30, 110, 14).fillRoundedRect(900, 100, 30, 110, 14);
+      g.fillStyle(0x22252b).fillRect(800, 250, 40, 60).fillRect(850, 250, 40, 60);
+      g.fillStyle(0x9aa0a6).fillRect(700, 196, 300, 10);
+      g.fillStyle(0x8a1f1f, 0.8).fillCircle(770, 200, 10).fillCircle(905, 260, 9);
+      const lamp = scene.add.rectangle(W / 2, 6, 300, 6, 0xfff6d8);
+      add(lamp);
+      pulse(lamp, 0.5, 140);
+      break;
+    }
+
+    case 'gym1114':
+    case 'gymNight': {
+      // 1114호: 소파 대신 파워랙, 벽 하나가 전부 거울, 무게별로 꽂힌 원판, 벤치 위의 1113호 할머니
+      g.fillStyle(0x3a3d42).fillRect(0, 0, W, AREA_H);
+      g.fillStyle(0x1e2024).fillRect(0, 300, W, 80);
+      for (let i = 0; i < 8; i++) g.lineStyle(1, 0x2a2c30).lineBetween(i * 120, 300, i * 120 + 60, AREA_H);
+      g.fillStyle(0x9fb0bd, 0.35).fillRect(520, 30, 420, 270);
+      g.lineStyle(3, 0x55595f).strokeRect(520, 30, 420, 270);
+      g.fillStyle(0x6b6f76).fillRect(140, 40, 12, 260).fillRect(320, 40, 12, 260).fillRect(140, 40, 192, 10);
+      g.fillStyle(0x9aa0a6).fillRect(100, 140, 270, 8);
+      for (const [x, r] of [[60, 34], [60, 26], [450, 30], [470, 22]] as const) g.fillStyle(0x111111).fillCircle(x, 300 - r, r);
+      g.fillStyle(0x2b2b2b).fillRect(600, 250, 180, 16).fillRect(610, 266, 10, 34).fillRect(760, 266, 10, 34);
+      g.fillStyle(0xc96b8a).fillRoundedRect(660, 196, 50, 56, 10);
+      g.fillStyle(0xe8c8a8).fillCircle(685, 186, 15);
+      g.fillStyle(0xd8d8d8).fillEllipse(685, 176, 30, 12);
+      g.lineStyle(3, 0x6b4a2a).lineBetween(715, 210, 728, 268);
+      g.fillStyle(0x8fa38f).fillRect(650, 236, 70, 22);
+      if (bg === 'gymNight') {
+        g.fillStyle(0x05060a, 0.78).fillRect(0, 0, W, AREA_H);
+        const doorGlow = scene.add.rectangle(30, 190, 60, 260, 0x3a4a6a, 0.12);
+        add(doorGlow);
+        pulse(doorGlow, 0.02, 1400);
+      }
+      break;
+    }
+
+    case 'horyongBody': {
+      // 호룡의 몸에 남은 피 묻은 손자국 넷 (보는 쪽에서는 그의 왼쪽이 오른편)
+      g.fillStyle(0x3a3d42).fillRect(0, 0, W, AREA_H);
+      g.fillStyle(0x9fb0bd, 0.2).fillRect(80, 20, 800, 340);
+      g.fillStyle(0xc8a68a).fillCircle(480, 46, 36).fillRect(462, 76, 36, 20);
+      g.fillStyle(0x1e1e1e).fillEllipse(480, 20, 70, 22);
+      g.fillStyle(0x5a5f66);
+      g.beginPath(); g.moveTo(310, 92).lineTo(650, 92).lineTo(575, 255).lineTo(385, 255).closePath(); g.fillPath();
+      g.fillStyle(0xc8a68a).fillRoundedRect(270, 96, 54, 170, 24).fillRoundedRect(636, 96, 54, 170, 24);
+      g.fillStyle(0x22252b).fillRect(392, 255, 82, 130).fillRect(486, 255, 82, 130);
+      const hand = (x: number, y: number, a: number) => {
+        g.fillStyle(0x6b1414, 0.85).fillEllipse(x, y, 34, 26);
+        for (let k = -2; k <= 2; k++) {
+          const dx = Math.cos(a + k * 0.28) * 26, dy = Math.sin(a + k * 0.28) * 26;
+          g.lineStyle(6, 0x6b1414, 0.85).lineBetween(x, y, x + dx, y + dy);
+        }
+      };
+      hand(664, 250, -1.4); // 그의 왼쪽 손목
+      hand(400, 236, 0.3); // 그의 오른쪽 허리
+      hand(618, 104, -2.2); // 그의 왼쪽 어깨
+      hand(432, 342, -0.6); // 그의 오른쪽 종아리
       break;
     }
 

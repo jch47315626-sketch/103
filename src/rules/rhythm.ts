@@ -56,6 +56,8 @@ export interface Note {
   noEffect?: string;
   /** 이 노트를 맞히면 끝 (원펀치) */
   finisher?: boolean;
+  /** 이 노트로 지금 상대가 쓰러지고 다음 상대가 들어온다 (여럿과 싸우는 장면) */
+  down?: boolean;
 }
 
 type Phrase = 'jabs' | 'combo' | 'body' | 'attack' | 'rest' | 'rush';
@@ -145,6 +147,7 @@ export type RhythmEvent =
   | { t: 'holdStart'; note: Note }
   | { t: 'holdDone'; note: Note }
   | { t: 'noEffect'; note: Note; text: string }
+  | { t: 'down'; note: Note }
   | { t: 'clear' }
   | { t: 'fail'; note: Note };
 
@@ -299,6 +302,7 @@ function applyHit(s: RhythmState, n: Note, judge: Judge, beat: number) {
   if (s.mode !== 'battle') {
     s.events.push({ t: 'judge', note: n, judge, dmg: 0, counter: false });
     if (n.noEffect) s.events.push({ t: 'noEffect', note: n, text: n.noEffect });
+    if (n.down) s.events.push({ t: 'down', note: n });
     if (n.finisher) {
       s.events.push({ t: 'ko' });
       for (const x of s.notes) if (!x.judge) x.judge = 'perfect';

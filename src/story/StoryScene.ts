@@ -420,7 +420,7 @@ export class StoryScene extends Phaser.Scene {
     const ready = ex.beat.need.every((id) => ex.seen.has(id));
     for (const s of ex.beat.spots) this.fx.add(this.spot(s, ex.seen.has(s.id)));
     if (ready) {
-      const go = button(this, W - 110, BOX_Y - 30, 190, 40, '1502호로 돌아간다 ▶', () => {
+      const go = button(this, W - 110, BOX_Y - 30, 190, 40, ex.beat.done ?? '계속 ▶', () => {
         this.explore = undefined;
         this.busy = false;
         this.clearFx();
@@ -475,7 +475,7 @@ export class StoryScene extends Phaser.Scene {
         this.scene.start('story', { chapter: nextIdx, inventory: this.inventory });
         return;
       }
-      const a = text(this, W / 2, H / 2 + 40, '체험판은 여기까지입니다.\n다음 화 — 제5화 「깔짝대기」: 11층 1114호, 마호룡을 빼 오러 간다.', 16, '#bbb', { fontFamily: SERIF, align: 'center', lineSpacing: 8 }).setOrigin(0.5);
+      const a = text(this, W / 2, H / 2 + 40, '체험판은 여기까지입니다.\n다음 화 — 제6화 「버티지 마」: 1113호, 할머니의 약을 가지러 간다.', 16, '#bbb', { fontFamily: SERIF, align: 'center', lineSpacing: 8 }).setOrigin(0.5);
       const b = button(this, W / 2, H / 2 + 120, 200, 40, '처음 화면으로', () => this.scene.start('title'), 'primary');
       this.fx.add([a, b]);
     });

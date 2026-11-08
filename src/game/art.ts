@@ -122,6 +122,10 @@ export const LOOKS: Record<string, Look> = {
   suitStairs: { shirt: 0x1f2a44, skin: 0xa9a28f, low: true, blood: 0.6 },
   apron: { shirt: 0x5c5f6e, skin: 0xb3a998, apron: 0xd8cfbb, glove: 0xf2c94c, hair: 0x3a2a22, blood: 0.3 },
   doyun: { shirt: 0xe8e6e1, skin: 0xb8ae9c, lanyard: 0x3b6fd1, blood: 1 },
+  // 제5화 11층 복도
+  hiker: { shirt: 0xb3412e, skin: 0xb0a690, hair: 0x2a2420, blood: 0.4 },
+  pajama: { shirt: 0x7d8fb3, skin: 0xb5ab98, blood: 0.6 },
+  worker: { shirt: 0x5a6148, skin: 0xa69c88, blood: 0.5 },
 };
 
 /** 정면을 보고 다가오는 감염자. 화면 아래 몸통 중심이 (0,0). */

@@ -48,6 +48,20 @@ describe('원작 전투', () => {
     expect(s.outcome).toBe('fail');
   });
 
+  it('11층: 쓰러뜨릴 때마다 다음 상대가 들어온다 (6번), 마지막은 계단의 것', () => {
+    const s = startStoryFight('floor11');
+    const downs: string[] = [];
+    for (const n of [...s.notes]) {
+      advance(s, n.beat);
+      hit(s, keyOf(n), n.beat);
+      for (const e of takeEvents(s)) if (e.t === 'down') downs.push(e.note.label!);
+    }
+    expect(downs).toHaveLength(6);
+    expect(s.outcome).toBe('clear');
+    const looks = STORY_FIGHTS.floor11.looks!;
+    expect(looks[looks.length - 1]).toBe('suitStairs');
+  });
+
   it('14층: 간을 쳐도 접히지 않는다 — 어퍼로 끝낸다', () => {
     const s = startStoryFight('apron');
     const [dodge, body] = s.notes;

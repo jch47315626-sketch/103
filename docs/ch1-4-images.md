@@ -5,7 +5,7 @@
 
 | 묶음 | 들어 있음 | 크기 |
 | --- | --- | --- |
-| 1. 이야기 배경 | 0 / 18 | 1536x1024 가로 → 가운데 띠를 잘라 쓴다 |
+| 1. 이야기 배경 | 0 / 21 | 1536x1024 가로 → 가운데 띠를 잘라 쓴다 |
 | 2. 싸움 배경 (1인칭) | 0 / 4 | 1536x1024 가로 |
 | 3. 싸움 상대 (투명 배경) | 0 / 7 | 1024x1536 세로, 투명 배경 |
 | 4. 이벤트 그림 | 0 / 22 | 1536x1024 가로 |
@@ -13,7 +13,7 @@
 | 6. 태리의 주먹 (1인칭, 투명 배경) | 0 / 4 | 1024x1024, 투명 배경 |
 | 7. 아이템 아이콘 (투명 배경) | 0 / 4 | 1024x1024, 투명 배경 |
 | 8. 타이틀 | 0 / 2 | 1536x1024 가로 |
-| **합계** | **0 / 71** | |
+| **합계** | **0 / 74** | |
 
 ## 쓰는 법
 
@@ -31,7 +31,7 @@ I am making illustrations for a story-driven game based on my own novel, a quiet
 
 ## 1. 이야기 배경 — 없으면 장면이 도형 그림으로 나온다
 
-크기: 1536x1024 가로 → 가운데 띠를 잘라 쓴다 · 0/18장 들어 있음
+크기: 1536x1024 가로 → 가운데 띠를 잘라 쓴다 · 0/21장 들어 있음
 
 ### ⬜ `bg_complex_dawn` — 1화 첫 장면, 새벽 해무
 
@@ -139,6 +139,24 @@ An open wardrobe, a black tracksuit in a plastic cover at the very back, a schoo
 
 ```
 A small dining table, two bowls of rice, one container of soy-braised beef with five quail eggs, chopsticks, dim warm light. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
+```
+
+### ⬜ `bg_floor11` — 5화 11층 복도 — 원판으로 괸 방화문, 호룡
+
+```
+An apartment stairwell entrance on the 11th floor, the fire door wide open, a gym bag on the floor, fluorescent light. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
+```
+
+### ⬜ `bg_1114` — 5화 1114호 홈짐, 1113호 할머니
+
+```
+A messy apartment turned into a home gym: barbell rack, dumbbells, protein tubs, trophies, a punching bag hanging from the ceiling. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
+```
+
+### ⬜ `bg_1114` — 5화 새벽 세 시 1114호 (어둡게 덮는다)
+
+```
+A messy apartment turned into a home gym: barbell rack, dumbbells, protein tubs, trophies, a punching bag hanging from the ceiling. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
 ## 2. 싸움 배경 (1인칭) — 왼쪽 ⅓은 어둡게
