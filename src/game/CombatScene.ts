@@ -8,7 +8,8 @@ import {
   type Col, type Note, type RhythmEvent, type RhythmState, type Row,
 } from '../rules/rhythm';
 import { STORY_FIGHTS, startStoryFight, type StoryFight } from '../rules/storyFights';
-import { drawGloves, drawZombieFront, type Gloves, type ZombieFront } from './art';
+import { drawGloves, drawZombieFront, imageZombie, type Gloves, type ZombieFront } from './art';
+import { coverImage, slotKey } from './images';
 import { audioLatency, audioRawNow, beat as drum, cueLeft, sfx } from './sfx';
 import { button, C, H, HEX, text, title, W } from './theme';
 
@@ -20,6 +21,8 @@ export interface CombatData {
   /** 원작 장면 (STORY_FIGHTS) */
   story?: string;
   seed?: number;
+  /** 태리의 옷 (주먹 그림): 1~3화는 교복, 연습은 트레이닝복 */
+  outfit?: 'uni' | 'track';
   onDone: (r: CombatSummary) => void;
 }
 
@@ -97,7 +100,9 @@ export class CombatScene extends Phaser.Scene {
 
     this.world = this.add.container(CX, PANEL / 2);
     const bg = this.fight?.bg ?? 'hall';
-    if (bg === 'stairs') this.drawStairs();
+    const bgImg = slotKey(this, `fight:${bg}`);
+    if (bgImg) this.world.add(coverImage(this, bgImg, -CX - 200, -PANEL / 2 - 100, W + 400, PANEL + 200)); // 피할 때 흔들려도 가장자리가 보이지 않게
+    else if (bg === 'stairs') this.drawStairs();
     else if (bg === 'room') this.drawRoom();
     else if (bg === 'wall') this.drawWall();
     else this.drawCorridor();
@@ -108,11 +113,14 @@ export class CombatScene extends Phaser.Scene {
     if (kind) {
       const rootY = kind === 'horyong' ? 385 : 360;
       this.zRoot = { x: 0, y: rootY - PANEL / 2 };
-      this.zombie = drawZombieFront(this, 0, this.zRoot.y, kind);
+      const img = slotKey(this, `enemy:${kind}`);
+      this.zombie = img ? imageZombie(this, 0, this.zRoot.y, img, !!e.low) : drawZombieFront(this, 0, this.zRoot.y, kind);
       this.world.add(this.zombie.root);
     }
 
-    this.gloves = drawGloves(this, CX, 392);
+    const outfit = this.d.outfit ?? (this.fight ? 'uni' : 'track');
+    const fist = (side: 'left' | 'right') => slotKey(this, outfit === 'track' ? `fist:${side}_track` : `fist:${side}`) ?? slotKey(this, `fist:${side}`);
+    this.gloves = drawGloves(this, CX, 392, { left: fist('left'), right: fist('right') });
     this.gloves.lead.x = this.gloves.leadHome.x = CX - 250;
     this.gloves.rear.x = this.gloves.rearHome.x = CX + 250;
 
@@ -471,6 +479,11 @@ export class CombatScene extends Phaser.Scene {
   private moveHead(col: Col) {
     if (!this.zombie || col === this.headCol) return;
     this.headCol = col;
+    if (this.zombie.image) {
+      // 그림 한 장: 몸 전체가 머리 쪽으로 기운다
+      this.tweens.add({ targets: this.zombie.root, x: this.zRoot.x + (col - 1) * LANE * 0.8, duration: 180, ease: 'Sine.Out' });
+      return;
+    }
     this.tweens.add({ targets: this.zombie.head, x: ((col - 1) * LANE) / this.rootScale, duration: 160, ease: 'Sine.Out' });
     this.tweens.add({ targets: this.zombie.root, angle: (col - 1) * 4, duration: 180 });
   }

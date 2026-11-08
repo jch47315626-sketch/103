@@ -1,5 +1,6 @@
 // 이야기 장면 진행기: 대본(script.ts)을 한 장면씩 보여 주고, 손잡이·붕대·전투 같은 순간은 직접 하게 한다.
 import Phaser from 'phaser';
+import { coverImage, fitHeight, slotKey } from '../game/images';
 import { sfx } from '../game/sfx';
 import { button, C, H, HEX, text, title, W } from '../game/theme';
 import { drawBg } from './backgrounds';
@@ -25,6 +26,8 @@ export class StoryScene extends Phaser.Scene {
   private waiting = false; // 클릭하면 다음으로
   private busy = false; // 직접 하는 순간: 클릭으로 넘기지 않는다
   private inventory: string[] = [];
+  private portrait?: Phaser.GameObjects.Image;
+  private boxBg!: Phaser.GameObjects.Rectangle;
   private explore?: { beat: Extract<Beat, { t: 'explore' }>; seen: Set<string> };
   /** 지금 진행 중인 장면 (자동 플레이 테스트가 읽는다) */
   current?: Beat;
@@ -49,6 +52,7 @@ export class StoryScene extends Phaser.Scene {
     // 글상자
     this.box = this.add.container(0, 0).setDepth(30);
     const bgBox = this.add.rectangle(W / 2, BOX_Y + (H - BOX_Y) / 2, W, H - BOX_Y, 0x0b0c0e, 0.96).setStrokeStyle(1, 0x2a2d31);
+    this.boxBg = bgBox;
     this.nameBg = this.add.rectangle(24, BOX_Y - 2, 120, 30, C.orange).setOrigin(0, 0.5);
     this.name = title(this, 36, BOX_Y - 2, '', 18, '#1a1a1a').setOrigin(0, 0.5);
     this.body = text(this, 36, BOX_Y + 26, '', 18, HEX(C.paper), { fontFamily: SERIF, wordWrap: { width: W - 90 }, lineSpacing: 9 });
@@ -77,7 +81,26 @@ export class StoryScene extends Phaser.Scene {
     if (this.waiting) { this.waiting = false; this.next(); }
   }
 
-  private show(who: string | null, str: string, opts: { color?: string; italic?: boolean } = {}) {
+  /** 말하는 사람의 서 있는 그림. 그림 파일이 있을 때만 */
+  private setPortrait(who: string | null, pt?: string | null) {
+    this.portrait?.destroy();
+    this.portrait = undefined;
+    if (!who || pt === null) return;
+    const base: Record<string, string> = {
+      태리: this.chapter >= 3 ? 'pt_taeri_track_neutral' : 'pt_taeri_uni_neutral',
+      세훈: 'pt_sehun_neutral',
+      아빠: 'pt_dad_stern',
+      호룡: 'pt_horyong_shout',
+    };
+    const name = pt ?? base[who];
+    const key = name ? slotKey(this, `pt:${name}`) : null;
+    if (!key) return;
+    this.portrait = fitHeight(this, key, W - 180, BOX_Y + 6, 340).setDepth(29);
+    if (who === '아빠') this.portrait.setTint(0xd8c8a8).setAlpha(0.85); // 회상
+  }
+
+  private show(who: string | null, str: string, opts: { color?: string; italic?: boolean; pt?: string | null } = {}) {
+    this.setPortrait(who, opts.pt);
     this.box.setVisible(true);
     this.nameBg.setVisible(!!who);
     this.name.setText(who ?? '');
@@ -97,7 +120,7 @@ export class StoryScene extends Phaser.Scene {
     this.waiting = true;
   }
 
-  private clearFx() { this.fx.removeAll(true); }
+  private clearFx() { this.fx.removeAll(true); this.portrait?.destroy(); this.portrait = undefined; }
 
   private next(): void {
     const beat = this.queue.shift();
@@ -110,9 +133,21 @@ export class StoryScene extends Phaser.Scene {
     this.clearFx();
     switch (beat.t) {
       case 'chapter': return this.chapterCard(beat.no, beat.name);
-      case 'bg': drawBg(this, this.bgLayer, beat.bg); return this.next();
+      case 'bg': drawBg(this, this.bgLayer, beat.bg); this.boxBg.setFillStyle(0x0b0c0e, 0.96); return this.next();
       case 'n': return this.show(null, beat.text);
-      case 'say': return this.show(beat.who, beat.text, { color: beat.who === '아빠' ? '#c9c1b0' : undefined, italic: beat.who === '아빠' });
+      case 'say': return this.show(beat.who, beat.text, { color: beat.who === '아빠' ? '#c9c1b0' : undefined, italic: beat.who === '아빠', pt: beat.pt });
+      case 'cg': {
+        // 이벤트 그림: 있으면 화면 가득, 다음 배경이 올 때까지 남는다
+        const key = slotKey(this, `cg:${beat.key}`);
+        if (key) {
+          this.bgLayer.removeAll(true);
+          const img = coverImage(this, key, 0, 0, W, H).setAlpha(0);
+          this.bgLayer.add(img);
+          this.tweens.add({ targets: img, alpha: 1, duration: 600 });
+          this.boxBg.setFillStyle(0x0b0c0e, 0.8);
+        }
+        return this.next();
+      }
       case 'big': return this.big(beat);
       case 'phone': return this.phone(beat);
       case 'voicemail': return this.voicemail();
@@ -133,9 +168,12 @@ export class StoryScene extends Phaser.Scene {
     this.box.setVisible(false);
     this.busy = true;
     const dim = this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 1);
+    this.fx.add(dim);
+    const cardKey = slotKey(this, 'chapter_card');
+    if (cardKey) this.fx.add(coverImage(this, cardKey, 0, 0, W, H).setAlpha(0.7));
     const a = title(this, W / 2, H / 2 - 30, `제${no}화`, 30, HEX(C.orange)).setOrigin(0.5);
     const b = title(this, W / 2, H / 2 + 20, name, 46, HEX(C.paper)).setOrigin(0.5);
-    this.fx.add([dim, a, b]);
+    this.fx.add([a, b]);
     [a, b].forEach((o) => o.setAlpha(0));
     this.tweens.add({ targets: [a, b], alpha: 1, duration: 700 });
     this.time.delayedCall(2200, () => {
@@ -351,6 +389,14 @@ export class StoryScene extends Phaser.Scene {
     const b = title(this, 0, -4, beat.name, 24, HEX(C.paper)).setOrigin(0.5);
     const c = text(this, 0, 30, beat.desc, 13, '#bbb', { fontFamily: SERIF, wordWrap: { width: 480 }, align: 'center' }).setOrigin(0.5);
     card.add([bg, a, b, c]).setScale(0.9).setAlpha(0);
+    const icon = beat.icon ? slotKey(this, `item:${beat.icon}`) : null;
+    if (icon) {
+      const im = this.add.image(-200, 0, icon);
+      im.setScale(90 / Math.max(im.width, im.height));
+      card.add(im);
+      [a, b, c].forEach((o) => o.setX(50));
+      c.setWordWrapWidth(380);
+    }
     this.fx.add(card);
     this.tweens.add({ targets: card, scale: 1, alpha: 1, duration: 250 });
     this.box.setVisible(false);

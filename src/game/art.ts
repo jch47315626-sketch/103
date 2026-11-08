@@ -82,6 +82,22 @@ export interface ZombieFront {
   /** 화면 왼쪽 팔 / 오른쪽 팔 — 어깨가 회전축 */
   armL: Phaser.GameObjects.Container;
   armR: Phaser.GameObjects.Container;
+  /** 그림 파일 한 장으로 된 상대 (머리·팔을 따로 움직일 수 없다) */
+  image?: Phaser.GameObjects.Image;
+}
+
+/** public/img 의 그림으로 만든 싸움 상대. 화면 아래 몸통 중심이 (0,0) */
+export function imageZombie(scene: Phaser.Scene, x: number, y: number, key: string, low = false): ZombieFront {
+  const root = scene.add.container(x, y);
+  const image = scene.add.image(0, 70, key).setOrigin(0.5, 1);
+  image.setScale((low ? 300 : 420) / image.height);
+  const head = scene.add.container(0, low ? -40 : -200);
+  const eyes = scene.add.graphics();
+  head.add(eyes);
+  const armL = scene.add.container(-110, -120);
+  const armR = scene.add.container(110, -120);
+  root.add([image, head, armL, armR]);
+  return { root, head, eyes, armL, armR, image };
 }
 
 function zArm(scene: Phaser.Scene, x: number, y: number, side: -1 | 1, low: boolean) {
@@ -214,8 +230,15 @@ export interface Gloves {
   rearHome: { x: number; y: number };
 }
 
-function glove(scene: Phaser.Scene, x: number, y: number, flip: number) {
+function glove(scene: Phaser.Scene, x: number, y: number, flip: number, imageKey?: string | null) {
   const c = scene.add.container(x, y);
+  if (imageKey) {
+    // 주먹 그림: 화면 아래 모서리에서 올라오는 구도
+    const im = scene.add.image(0, 0, imageKey).setOrigin(0.5, 0.3);
+    im.setScale(280 / im.height);
+    c.add(im);
+    return c;
+  }
   const g = scene.add.graphics();
   // 팔뚝 (화면 아래로 이어짐)
   g.fillStyle(C.jacket).fillRoundedRect(-34, 30, 68, 140, 20);
@@ -230,10 +253,10 @@ function glove(scene: Phaser.Scene, x: number, y: number, flip: number) {
   return c;
 }
 
-export function drawGloves(scene: Phaser.Scene, cx: number, y: number): Gloves {
+export function drawGloves(scene: Phaser.Scene, cx: number, y: number, images: { left?: string | null; right?: string | null } = {}): Gloves {
   const leadHome = { x: cx - 150, y };
   const rearHome = { x: cx + 170, y: y + 20 };
-  const lead = glove(scene, leadHome.x, leadHome.y, 1).setAngle(8);
-  const rear = glove(scene, rearHome.x, rearHome.y, -1).setAngle(-8);
+  const lead = glove(scene, leadHome.x, leadHome.y, 1, images.left).setAngle(8);
+  const rear = glove(scene, rearHome.x, rearHome.y, -1, images.right).setAngle(-8);
   return { lead, rear, leadHome, rearHome };
 }

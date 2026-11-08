@@ -1,5 +1,6 @@
 // 이야기 장면의 배경. 웹툰 그림이 준비되면 같은 이름의 이미지로 바꾸면 된다.
 import Phaser from 'phaser';
+import { coverImage, slotKey } from '../game/images';
 import { C, text, W } from '../game/theme';
 import type { Bg } from './script';
 
@@ -7,6 +8,9 @@ const AREA_H = 380; // 아래 글상자 위까지
 
 export function drawBg(scene: Phaser.Scene, layer: Phaser.GameObjects.Container, bg: Bg) {
   layer.removeAll(true);
+  // public/img 에 그림이 있으면 그걸 쓴다
+  const img = slotKey(scene, `bg:${bg}`);
+  if (img) { layer.add(coverImage(scene, img, 0, 0, W, AREA_H)); return; }
   const g = scene.add.graphics();
   layer.add(g);
   const add = (o: Phaser.GameObjects.GameObject) => layer.add(o);

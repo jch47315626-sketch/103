@@ -2,13 +2,27 @@ import Phaser from 'phaser';
 import { CHAPTERS } from '../story/script';
 import { loadProgress } from '../story/progress';
 import { drawTaeri } from './art';
+import { coverImage, preloadImages, slotKey } from './images';
 import { isMuted, sfx, toggleMute, unlockAudio } from './sfx';
 import { button, C, H, HEX, text, title, W } from './theme';
 
 export class TitleScene extends Phaser.Scene {
   constructor() { super('title'); }
 
+  preload() {
+    preloadImages(this);
+  }
+
   create() {
+    const key = slotKey(this, 'title');
+    if (key) {
+      coverImage(this, key, 0, 0, W, H);
+      this.add.rectangle(0, 0, W * 0.45, H, 0x000000, 0.45).setOrigin(0);
+    } else this.drawPlaceholder();
+    this.drawMenu();
+  }
+
+  private drawPlaceholder() {
     const g = this.add.graphics();
     g.fillGradientStyle(0x0b1220, 0x0b1220, 0x1d222c, 0x1d222c).fillRect(0, 0, W, H);
     // 해무 속의 103동
@@ -25,6 +39,9 @@ export class TitleScene extends Phaser.Scene {
     }
     const t = drawTaeri(this, 520, 530, 1.2);
     t.root.setAlpha(0.95);
+  }
+
+  private drawMenu() {
 
     title(this, 56, 40, '103동', 104, HEX(C.paper)).setStroke('#000', 6);
     text(this, 62, 160, '27살 여고생, 동대표 되다', 20, HEX(C.orange), { fontStyle: '700' });
