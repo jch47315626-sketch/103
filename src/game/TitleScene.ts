@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { CHAPTERS } from '../story/script';
 import { loadProgress } from '../story/progress';
 import { drawTaeri } from './art';
 import { coverImage, preloadImages, slotKey } from './images';
@@ -58,26 +57,13 @@ export class TitleScene extends Phaser.Scene {
       // 제1화는 직접 돌아다니는 맵으로, 나머지는 아직 이야기 장면으로
       this.time.delayedCall(520, () => (chapter === 0 ? this.scene.start('map', { level: 'ch1' }) : this.scene.start('story', { chapter })));
     };
-    let y = 260;
-    button(this, 190, y, 260, 44, `처음부터 — 제1화 「${CHAPTERS[0].name}」`, () => start(0), 'primary');
-    y += 54;
+    // 화를 고르지 않는다: 처음부터 이어서 진행만 한다
     if (p.chapter > 0) {
-      button(this, 190, y, 260, 44, `이어서 — 제${CHAPTERS[p.chapter].no}화 「${CHAPTERS[p.chapter].name}」`, () => start(p.chapter));
-      y += 54;
+      button(this, 190, 270, 260, 48, '이어하기', () => start(p.chapter), 'primary');
+      button(this, 190, 330, 260, 40, '처음부터', () => start(0));
+    } else {
+      button(this, 190, 280, 260, 52, '시작', () => start(0), 'primary');
     }
-    text(this, 62, y - 6, '화 선택', 12, '#777');
-    CHAPTERS.forEach((c, i) => {
-      const b = button(this, 92 + i * 66, y + 26, 58, 34, `${c.no}화`, () => start(i));
-      if (i > p.chapter) b.setEnabled(false);
-    });
-    y += 74;
-    text(this, 62, y - 6, '연습 전투 (원작 밖)', 12, '#777');
-    ([['normal', '일반'], ['crawler', '기어 오는'], ['horyong', '호룡']] as const).forEach(([id, label], i) => {
-      button(this, 112 + i * 104, y + 26, 96, 34, label, () => {
-        unlockAudio();
-        this.scene.start('combat', { enemy: id, seed: Math.floor(Math.random() * 1e9), onDone: () => this.scene.start('title') });
-      });
-    });
 
     const mute = button(this, W - 60, 28, 90, 30, isMuted() ? '소리 끔' : '소리 켬', () => {
       mute.label.setText(toggleMute() ? '소리 끔' : '소리 켬');

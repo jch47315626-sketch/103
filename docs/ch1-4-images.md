@@ -7,13 +7,13 @@
 | --- | --- | --- |
 | 1. 이야기 배경 | 0 / 21 | 1536x1024 가로 → 가운데 띠를 잘라 쓴다 |
 | 2. 싸움 배경 (1인칭) | 0 / 4 | 1536x1024 가로 |
-| 3. 싸움 상대 (투명 배경) | 0 / 7 | 1024x1536 세로, 투명 배경 |
+| 3. 싸움 상대 (투명 배경) | 0 / 4 | 1024x1536 세로, 투명 배경 |
 | 4. 이벤트 그림 | 0 / 22 | 1536x1024 가로 |
 | 5. 대화용 서 있는 그림 (투명 배경) | 0 / 10 | 1024x1536 세로, 투명 배경 |
-| 6. 태리의 주먹 (1인칭, 투명 배경) | 0 / 4 | 1024x1024, 투명 배경 |
+| 6. 태리의 주먹 (1인칭, 투명 배경) | 0 / 2 | 1024x1024, 투명 배경 |
 | 7. 아이템 아이콘 (투명 배경) | 0 / 4 | 1024x1024, 투명 배경 |
 | 8. 타이틀 | 0 / 2 | 1536x1024 가로 |
-| **합계** | **0 / 74** | |
+| **합계** | **0 / 69** | |
 
 ## 쓰는 법
 
@@ -189,7 +189,7 @@ Facing a thin gypsum balcony partition wall up close, a laundry rack beside it. 
 
 ## 3. 싸움 상대 (투명 배경)
 
-크기: 1024x1536 세로, 투명 배경 · 0/7장 들어 있음
+크기: 1024x1536 세로, 투명 배경 · 0/4장 들어 있음
 
 ### ⬜ `enemy_suit1501` — 1화 1501호 남자
 
@@ -213,24 +213,6 @@ A person afflicted by a mysterious illness: a middle-aged Korean woman in a kitc
 
 ```
 A person afflicted by a mysterious illness: a gentle-faced Korean man in his early 30s in a white dress shirt with a broken blue lanyard, face still recognizably kind, tragic rather than frightening, ashen grey skin, deeply reddened eyes with tiny pupils, vacant expression, dark rust-brown stains on the clothes, unsteady posture. Portrait image (2:3), waist-up, facing the viewer straight on, transparent background, light from the right. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### ⬜ `enemy_resident` — 연습 전투: 일반
-
-```
-A person afflicted by a mysterious illness: a Korean apartment resident in pajamas and a cardigan, arms raised, ashen grey skin, deeply reddened eyes with tiny pupils, vacant expression, dark rust-brown stains on the clothes, unsteady posture. Portrait image (2:3), waist-up, facing the viewer straight on, transparent background, light from the right. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### ⬜ `enemy_crawler` — 연습 전투: 기어 오는
-
-```
-A person afflicted by a mysterious illness: a person low on all fours moving toward the viewer, long messy hair, torn clothes, ashen grey skin, deeply reddened eyes with tiny pupils, vacant expression, dark rust-brown stains on the clothes, unsteady posture. Portrait image (2:3), waist-up, facing the viewer straight on, transparent background, light from the right. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### ⬜ `enemy_horyong` — 연습 전투: 호룡
-
-```
-A person afflicted by a mysterious illness: a massive Korean bodybuilder in a torn tank top, gym towel around the neck, one eye scarred shut, imposing bulk, ashen grey skin, deeply reddened eyes with tiny pupils, vacant expression, dark rust-brown stains on the clothes, unsteady posture. Portrait image (2:3), waist-up, facing the viewer straight on, transparent background, light from the right. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
 ## 4. 이벤트 그림 — 결정적 장면에 화면 가득 뜬다
@@ -435,7 +417,7 @@ Ma Horyong, a loud Korean gym owner in his 40s, huge muscular build, buzz cut, s
 
 ## 6. 태리의 주먹 (1인칭, 투명 배경)
 
-크기: 1024x1024, 투명 배경 · 0/4장 들어 있음
+크기: 1024x1024, 투명 배경 · 0/2장 들어 있음
 
 ### ⬜ `hud_fist_left` — 싸움 화면 왼 주먹 (교복)
 
@@ -447,18 +429,6 @@ A woman's left fist and forearm rising from the bottom left corner in a boxing g
 
 ```
 A woman's right fist and forearm rising from the bottom right corner in a boxing guard, wrapped in white athletic tape, navy uniform sleeve, first-person view. Square image, transparent background, the arm enters from the frame edge as described. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### ⬜ `hud_fist_left_track` — 연습 전투 왼 주먹 (트레이닝복)
-
-```
-A woman's left fist and forearm rising from the bottom left corner in a boxing guard, wrapped in white athletic tape, black tracksuit sleeve, first-person view. Square image, transparent background, the arm enters from the frame edge as described. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### ⬜ `hud_fist_right_track` — 연습 전투 오른 주먹 (트레이닝복)
-
-```
-A woman's right fist and forearm rising from the bottom right corner in a boxing guard, wrapped in white athletic tape, black tracksuit sleeve, first-person view. Square image, transparent background, the arm enters from the frame edge as described. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
 ## 7. 아이템 아이콘 (투명 배경)

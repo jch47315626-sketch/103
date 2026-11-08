@@ -368,6 +368,7 @@ export class StoryScene extends Phaser.Scene {
     this.time.delayedCall(260, () => {
       this.scene.launch('combat', {
         story: id,
+        outfit: this.chapter >= 3 ? 'track' : 'uni',
         onDone: () => {
           this.scene.resume();
           this.cameras.main.fadeIn(300);

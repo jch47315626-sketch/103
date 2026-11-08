@@ -238,28 +238,6 @@
             "enemy_doyun"
           ],
           "use": "3화 12층 계단참의 도윤"
-        },
-        {
-          "slot": "enemy:normal",
-          "files": [
-            "enemy_resident",
-            "enemy_normal"
-          ],
-          "use": "연습 전투: 일반"
-        },
-        {
-          "slot": "enemy:crawler",
-          "files": [
-            "enemy_crawler"
-          ],
-          "use": "연습 전투: 기어 오는"
-        },
-        {
-          "slot": "enemy:horyong",
-          "files": [
-            "enemy_horyong"
-          ],
-          "use": "연습 전투: 호룡"
         }
       ]
     },
@@ -516,20 +494,6 @@
             "hud_fist_right"
           ],
           "use": "싸움 화면 오른 주먹 (교복)"
-        },
-        {
-          "slot": "fist:left_track",
-          "files": [
-            "hud_fist_left_track"
-          ],
-          "use": "연습 전투 왼 주먹 (트레이닝복)"
-        },
-        {
-          "slot": "fist:right_track",
-          "files": [
-            "hud_fist_right_track"
-          ],
-          "use": "연습 전투 오른 주먹 (트레이닝복)"
         }
       ]
     },
