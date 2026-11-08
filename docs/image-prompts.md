@@ -4,7 +4,7 @@
 프롬프트는 이미지 모델이 가장 잘 알아듣는 **영어**로 쓰고, 위에 한국어로 무엇을 그리는지 적었다.
 각 항목의 `파일명`은 코드에서 바꿔 끼울 때 쓸 이름이다(`Bg` 키, 적 `look` 키와 같다).
 
-> **ChatGPT용 (검열 안전, 전체 226개)**: `docs/chatgpt-prompts.md`
+> **ChatGPT용 (검열 안전, 캐릭터 시트 제외 212개)**: `docs/chatgpt-prompts.md`
 >
 > **배경만 붙여넣기용으로**: `docs/background-prompts.md`
 >

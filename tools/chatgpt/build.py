@@ -28,8 +28,6 @@ KINDS = {
                  '1920×1080으로 잘라 쓴다'),
     'cg':       ('1536x1024 가로', 'Wide landscape image (3:2), a single dramatic story illustration panel.',
                  '이벤트 그림. 1920×1080으로 잘라 쓴다'),
-    'sheet':    ('1536x1024 가로', 'Character reference sheet on a plain light grey background, full body, '
-                 'consistent proportions across views.', '다른 그림을 뽑을 때 레퍼런스로 올린다'),
     'portrait': ('1024x1536 세로', 'Portrait image (2:3), waist-up, facing slightly toward the viewer, '
                  'transparent background.', '대화창 옆 서 있는 그림'),
     'enemy':    ('1024x1536 세로', 'Portrait image (2:3), waist-up, facing the viewer straight on, '
@@ -62,25 +60,7 @@ def sec(title: str, note: str, items):
     SECTIONS.append((title, note, items))
 
 
-# ───────────────────────── 1. 캐릭터 기준 시트
-sec('1. 캐릭터 기준 시트', '가장 먼저 뽑는다. 마음에 드는 그림을 이후 대화에 올리고 "이 인물과 같게"라고 붙인다.', [
-    ('char_taeri_uniform', '태리 — 교복', 'sheet', f'Front, side and back views of {TAERI_UNI}, pleated navy skirt, pink backpack, {HANDS}.'),
-    ('char_taeri_track', '태리 — 검은 트레이닝복', 'sheet', f'Front, side and back views of {TAERI_TRACK}, small red embroidered stitching on the back, {HANDS}, relaxed boxer stance with chin tucked.'),
-    ('char_taeri_young', '태리 — 현역 시절 (회상)', 'sheet', 'Front and side views of a 23-year-old Korean woman boxer at her peak, both eyes uncovered, short black ponytail, red boxing shorts and black top, red gloves, confident.'),
-    ('char_doyun', '도윤 — 평소', 'sheet', f'Front and side views of {DOYUN}, navy slacks, blue lanyard with a staff ID card, holding a stack of parcels, shy smile.'),
-    ('char_doyun_ill', '도윤 — 발병 후', 'sheet', f'Front and side views of the same man as before, now ill: {ILL}, shirt collar stained, broken blue lanyard, one shoe missing and a worn grey sock.'),
-    ('char_sehun', '세훈', 'sheet', f'Front and side views of {SEHUN}, holding a red fire extinguisher, calm clinical posture.'),
-    ('char_horyong', '호룡 — 평소', 'sheet', f'Front and side views of {HORYONG}, track pants, gym towel around the neck, a scar over one closed eye, big grin.'),
-    ('char_horyong_ill', '호룡 — 발병 후', 'sheet', f'Front view of the same muscular gym owner, now ill: {ILL}, torn tank top, towel still around the neck.'),
-    ('char_dad', '아빠', 'sheet', f'Front and side views of {DAD}, focus mitts under one arm.'),
-    ('char_dad_young', '아빠 — 젊은 시절 (회상)', 'sheet', 'Front view of a Korean boxing coach in his 40s, firm build, black hair, windbreaker, holding focus mitts, slight smile, harbor background hint.'),
-    ('char_rider', '노란 머리 배달 라이더', 'sheet', 'Front and side views of a cheerful young Korean delivery rider with dyed yellow hair, helmet under arm, insulated delivery backpack, rain jacket.'),
-    ('char_canteen', '매점 아주머니', 'sheet', 'Front view of a warm Korean woman in her 50s who runs a school snack shop, apron, cardigan, permed hair.'),
-    ('char_guard', '경비 아저씨', 'sheet', 'Front view of an elderly Korean apartment security guard in a navy uniform and cap, kind face.'),
-    ('char_neighbors', '103동 주민들 (단역 모음)', 'sheet', 'A lineup of six ordinary Korean apartment residents of different ages: an elderly woman with a cane, a middle-aged man in a cardigan, a young mother, a college student in a hoodie, an office worker in a suit, a retired man in a fishing vest. Plain grey background.'),
-])
-
-# ───────────────────────── 2. 대화용 서 있는 그림
+# ───────────────────────── 1. 대화용 서 있는 그림
 P = []
 for k, ko, d in [('neutral', '무표정', 'neutral calm expression'), ('sad', '슬픔', 'eyes lowered, holding back tears'),
                  ('angry', '분노', 'jaw clenched, fierce glare'), ('determined', '결의', 'steady determined look'),
@@ -99,11 +79,11 @@ P += [('pt_doyun_smile', '도윤 — 웃음 (회상)', 'portrait', f'{DOYUN}, bl
       ('pt_dad_stern', '아빠 — 엄함 (회상)', 'portrait', f'{DAD}, stern look, arms crossed, muted sepia tint.'),
       ('pt_dad_smile', '아빠 — 웃음 (회상)', 'portrait', f'{DAD}, rare gentle smile at a harbor, muted sepia tint.'),
       ('pt_rider', '배달 라이더', 'portrait', 'A cheerful young Korean delivery rider with dyed yellow hair, helmet under arm, handing over a food bag with a grin.')]
-sec('2. 대화용 서 있는 그림 (투명 배경)', '대사 장면에서 글상자 옆에 세운다. 캐릭터 시트를 같이 올리고 뽑는다.', P)
+sec('1. 대화용 서 있는 그림 (투명 배경)', '대사 장면에서 글상자 옆에 세운다. 만들어 둔 캐릭터 시트를 같이 올리고 뽑는다.', P)
 
-# ───────────────────────── 3. 배경
+# ───────────────────────── 2. 배경
 B = lambda i, ko, p: (i, ko, 'bg', p)  # noqa: E731
-sec('3-1. 배경 — 한마음 아파트 단지 바깥', '', [
+sec('2-1. 배경 — 한마음 아파트 단지 바깥', '', [
     B('bg_complex_dawn', '단지 전경 — 새벽 해무', 'A Korean high-rise apartment complex at dawn before sunrise, dense sea fog rolling low between the towers, a few warm windows lit, distant red emergency light glow at the main gate, dark sea on the horizon.'),
     B('bg_complex_day', '단지 전경 — 낮 (발병 이후)', 'A Korean high-rise apartment complex on an overcast afternoon, abandoned cars parked at odd angles, laundry left on balconies, eerily quiet.'),
     B('bg_complex_night', '단지 전경 — 정전된 밤', 'A Korean high-rise apartment complex at night during a blackout, almost every window dark, only a few candle-lit windows, moonlight on the towers.'),
@@ -126,7 +106,7 @@ sec('3-1. 배경 — 한마음 아파트 단지 바깥', '', [
     B('bg_rooftop_night', '103동 옥상 — 밤', 'The rooftop of an apartment tower at night, the dark city below with a few fires glowing far away, stars, wind.'),
     B('bg_water_tank', '옥상 물탱크실', 'A rooftop water tank room, large blue tanks, pipes and valves, a single bulb.'),
 ])
-sec('3-2. 배경 — 103동 안 (공용 공간)', '', [
+sec('2-2. 배경 — 103동 안 (공용 공간)', '', [
     B('bg_lobby', '1층 로비', 'The ground floor lobby of a Korean apartment tower, glass entrance door with a keypad, mailboxes on the wall, elevator doors, scattered flyers.'),
     B('bg_mailboxes', '1층 우편함', 'A wall of apartment mailboxes, some stuffed with uncollected mail, a delivery parcel on the floor.'),
     B('bg_elevator_in', '엘리베이터 안', 'Inside a small apartment elevator, mirror wall, floor buttons panel, harsh light, a mirror crack.'),
@@ -144,7 +124,7 @@ sec('3-2. 배경 — 103동 안 (공용 공간)', '', [
     B('bg_machine_room', '지하 기계실', 'An apartment basement machine room with an electrical panel, generators, pipes, warning lights, a flashlight beam.'),
     B('bg_rooftop_door', '옥상 출입문', 'The top of an apartment stairwell with a metal rooftop door, daylight leaking around the edges, a padlock hanging open.'),
 ])
-sec('3-3. 배경 — 세대 안', '', [
+sec('2-3. 배경 — 세대 안', '', [
     B('bg_1502_door', '1502호 현관 안쪽', 'Inside view of a Korean apartment front door: heavy grey steel door, digital lock with lever handle, small peephole, shoe rack, a pink backpack by the door.'),
     B('bg_1502_living', '1502호 거실', 'A bare bachelor apartment living room, almost no furniture, a sofa, stacked delivery containers, a single championship belt case on a shelf, curtains half drawn.'),
     B('bg_1502_living_night', '1502호 거실 — 밤', 'The same bare living room at night with lights off, city glow through the balcony windows, a half-empty water bottle on the floor.'),
@@ -170,7 +150,7 @@ sec('3-3. 배경 — 세대 안', '', [
     B('bg_unit_family', '아이 있는 세대', "A family apartment living room with a child's drawings on the fridge, a small tent made of blankets, toys neatly put away, quiet."),
     B('bg_shelter_room', '주민 임시 대피 세대', 'An apartment living room converted into a shared shelter, sleeping mats lined up, a table with water bottles and canned food sorted, a whiteboard with blank lines.'),
 ])
-sec('3-4. 배경 — 동구시', '대본에 이름이 나온 장소와, 바깥으로 나가면 필요할 곳.', [
+sec('2-4. 배경 — 동구시', '대본에 이름이 나온 장소와, 바깥으로 나가면 필요할 곳.', [
     B('bg_coast_road', '동구시 해안도로', 'A coastal road in a Korean port city, sea on one side, apartment towers on the other, abandoned cars, overcast.'),
     B('bg_city_street', '동구시 시내 거리', 'A Korean downtown street after an evacuation, cars abandoned with doors open, shop shutters down, a fallen traffic cone, empty.'),
     B('bg_city_night', '동구시 시내 — 밤', 'A Korean downtown street at night during a blackout, only a few neon signs flickering, wet asphalt.'),
@@ -186,7 +166,7 @@ sec('3-4. 배경 — 동구시', '대본에 이름이 나온 장소와, 바깥�
     B('bg_hospital_hall', '병원 복도', 'A long hospital corridor at night, flickering lights, wheelchairs left against the wall, an exit sign glowing.'),
     B('bg_bridge', '동구시 다리', 'A long bridge out of a Korean port city, cars jammed and abandoned, a military checkpoint at the far end, overcast.'),
 ])
-sec('3-5. 배경 — 백합여자고등학교', '학생이 위험에 처한 모습은 검열에 걸리기 쉬우니, 학교 배경은 사람 없이 뽑는다.', [
+sec('2-5. 배경 — 백합여자고등학교', '학생이 위험에 처한 모습은 검열에 걸리기 쉬우니, 학교 배경은 사람 없이 뽑는다.', [
     B('bg_school_gate', '정문', 'The front gate of a Korean high school, a banner frame left blank, cherry trees, empty.'),
     B('bg_school_yard', '운동장', 'A Korean high school sports field with the main building behind, empty, overcast.'),
     B('bg_school_gym_ready', '체육관 — 입학식 준비', 'A school gymnasium set up for an entrance ceremony, rows of folding chairs, a stage with flowers, empty.'),
@@ -197,7 +177,7 @@ sec('3-5. 배경 — 백합여자고등학교', '학생이 위험에 처한 모�
     B('bg_school_store', '매점', 'A small school snack shop counter with snacks and stationery, name tags on a display stand, shutter half down.'),
     B('bg_school_roof', '학교 옥상', 'The rooftop of a school building, railings, a view of the port city and the sea.'),
 ])
-sec('3-6. 배경 — 회상', '', [
+sec('2-6. 배경 — 회상', '', [
     B('bg_flash_boxing_gym', '아빠의 복싱 체육관', 'An old Korean boxing gym, a worn ring, heavy bags, faded posters left blank, sunlight through dusty windows, sepia tone.'),
     B('bg_flash_ring', '챔피언전 링', 'A professional boxing ring under bright spotlights, a cheering crowd blurred in the dark, ropes glowing, dramatic.'),
     B('bg_flash_locker', '시합 대기실', 'A boxing locker room before a fight, a bench with gloves and tape, a tracksuit folded in a bag, fluorescent light.'),
@@ -206,9 +186,9 @@ sec('3-6. 배경 — 회상', '', [
     B('bg_flash_rejection', '불합격 문자를 받던 방', 'A dim apartment room, a phone lying face up on the floor with a glowing blank screen, crumpled resumes, night.'),
 ])
 
-# ───────────────────────── 4. 싸움 배경 (1인칭)
+# ───────────────────────── 3. 싸움 배경 (1인칭)
 F = lambda i, ko, p: (i, ko, 'fight', p)  # noqa: E731
-sec('4. 싸움 배경 (1인칭)', '태리의 왼쪽 눈은 보이지 않아서 왼쪽 ⅓을 어둡게 뽑는다.', [
+sec('3. 싸움 배경 (1인칭)', '태리의 왼쪽 눈은 보이지 않아서 왼쪽 ⅓을 어둡게 뽑는다.', [
     F('fight_hall', '15층 복도', 'An apartment hallway toward the elevator, steel doors on both sides, fluorescent light.'),
     F('fight_stairs', '계단참', 'A stairwell landing looking down the steps, metal railing on the right, concrete wall on the left, green emergency light.'),
     F('fight_room', '새벽 거실 (섀도복싱)', 'An empty dark living room at 4 am, furniture pushed to the walls, faint blue window light.'),
@@ -223,7 +203,7 @@ sec('4. 싸움 배경 (1인칭)', '태리의 왼쪽 눈은 보이지 않아서 �
     F('fight_harbor', '부두', 'A harbor pier with ropes and bollards, grey sea.'),
 ])
 
-# ───────────────────────── 5. 싸움 상대
+# ───────────────────────── 4. 싸움 상대
 E = []
 for i, ko, d in [
     ('enemy_suit1501', '1501호 남자', 'a Korean office worker in a grey suit and grey tie, hunched and reaching forward'),
@@ -242,11 +222,11 @@ for i, ko, d in [
     E.append((i, ko, 'enemy', f'A person afflicted by a mysterious illness: {d}, {ILL}.'))
 E.append(('enemy_pose_guide', '(참고) 동작 변형 붙이는 법', 'enemy',
           'Same character as the previous image, now: pulling one arm back for a wide swipe / lunging forward with mouth open / both hands thrust forward to grab / head snapped back from a punch / falling backward.'))
-sec('5. 싸움 상대 (투명 배경)', '같은 대화에서 원본을 뽑은 뒤, 마지막 항목처럼 "같은 인물, 이번엔 ~" 으로 동작 변형을 뽑는다.', E)
+sec('4. 싸움 상대 (투명 배경)', '같은 대화에서 원본을 뽑은 뒤, 마지막 항목처럼 "같은 인물, 이번엔 ~" 으로 동작 변형을 뽑는다.', E)
 
-# ───────────────────────── 6. 이벤트 그림
+# ───────────────────────── 5. 이벤트 그림
 C = lambda i, ko, p: (i, ko, 'cg', p)  # noqa: E731
-sec('6. 이벤트 그림 (1화~4화 결정적 장면)', '', [
+sec('5. 이벤트 그림 (1화~4화 결정적 장면)', '', [
     C('cg_dawn_run', '1화 — 새벽 달리기', f'{TAERI}, in a black training outfit, jogging alone on a foggy apartment path at dawn, breath visible.'),
     C('cg_eyepatch', '1화 — 안대를 묶는 아침', f'{TAERI_UNI}, tying the strap of her eyepatch in front of a fogged bathroom mirror, seen in the mirror reflection.'),
     C('cg_door_handle', '1화 — 열지 못한 문', f'{TAERI_UNI}, her hand frozen on the lever handle of a steel front door, forehead against the door, eyes shut with tears.'),
@@ -271,8 +251,8 @@ sec('6. 이벤트 그림 (1화~4화 결정적 장면)', '', [
     C('cg_flash_rider', '회상 — "맛있게 드세요, 챔피언"', f'{TAERI}, at her apartment door receiving a food delivery from a grinning yellow-haired rider, warm evening light.'),
 ])
 
-# ───────────────────────── 7. 주먹 (1인칭 HUD)
-sec('7. 태리의 주먹 (1인칭, 투명 배경)', '', [
+# ───────────────────────── 6. 주먹 (1인칭 HUD)
+sec('6. 태리의 주먹 (1인칭, 투명 배경)', '', [
     ('hud_fist_left', '왼 주먹 — 교복', 'hud', "A woman's left fist and forearm rising from the bottom left corner in a boxing guard, wrapped in white athletic tape, navy uniform sleeve, first-person view."),
     ('hud_fist_right', '오른 주먹 — 교복', 'hud', "A woman's right fist and forearm rising from the bottom right corner in a boxing guard, wrapped in white athletic tape, navy uniform sleeve, first-person view."),
     ('hud_fist_left_track', '왼 주먹 — 트레이닝복', 'hud', "A woman's left fist and forearm rising from the bottom left corner in a boxing guard, wrapped in white athletic tape, black tracksuit sleeve, first-person view."),
@@ -280,9 +260,9 @@ sec('7. 태리의 주먹 (1인칭, 투명 배경)', '', [
     ('hud_fist_jab', '뻗은 주먹 (잽)', 'hud', "A woman's taped fist punching straight forward away from the viewer, motion blur, first-person view."),
 ])
 
-# ───────────────────────── 8. 아이템
+# ───────────────────────── 7. 아이템
 I = lambda i, ko, p: (i, ko, 'item', p)  # noqa: E731
-sec('8. 아이템 아이콘 (투명 배경)', '글자가 들어가는 물건은 비워 두고 게임에서 글자를 얹는다.', [
+sec('7. 아이템 아이콘 (투명 배경)', '글자가 들어가는 물건은 비워 두고 게임에서 글자를 얹는다.', [
     I('item_idcard', '도윤의 사원증', 'A staff ID card with a small photo of a shy smiling man, broken blue lanyard, a dark smudge on one corner.'),
     I('item_letter', '도윤의 편지', 'An opened white envelope with a handwritten letter folded half out, illegible neat handwriting.'),
     I('item_nametag', "명찰 '1-3 강태리'", 'A small rectangular school name tag pin with a blank white plate and navy border.'),
@@ -322,9 +302,9 @@ sec('8. 아이템 아이콘 (투명 배경)', '글자가 들어가는 물건은 
     I('item_uniform_bag', '비닐에 넣은 교복', 'A navy sailor-collar school uniform sealed in a clear plastic bag, tied twice.'),
 ])
 
-# ───────────────────────── 9. UI
+# ───────────────────────── 8. UI
 U = lambda i, ko, p: (i, ko, 'ui', p)  # noqa: E731
-sec('9. UI · 타이틀', '', [
+sec('8. UI · 타이틀', '', [
     U('title_key', '타이틀 키 아트', f'Wide 16:9 key art. {TAERI_TRACK}, {HANDS}, standing in a dark apartment emergency stairwell seen from slightly below, a staff ID card with a blue lanyard in her chest pocket, green emergency light from above, many pale reaching hands far below in the spiral stairwell, dust haze. Composition weighted to the right, empty dark space on the left third for a title.'),
     U('title_key_ch1', '타이틀 키 아트 — 교복', f'Wide 16:9 key art. {TAERI_UNI}, {HANDS}, standing in a dark apartment stairwell seen from slightly below, green emergency light from above, pale reaching hands far below. Composition weighted to the right, empty dark space on the left third.'),
     U('title_bg_loop', '타이틀 배경 (인물 없음)', 'Wide 16:9 image. A Korean apartment tower at night in sea fog, a single lit window on the 15th floor, empty sky on the left half.'),
@@ -363,7 +343,7 @@ def build():
          f'> `python tools/chatgpt/build.py`로 만든 파일 (프롬프트 {total}개). 고칠 땐 `tools/chatgpt/build.py`를 고친다.', '',
          '## 쓰는 법', '',
          '1. ChatGPT에서 **새 대화**를 열고, 아래 `대화 시작용 문장`을 먼저 보낸다. 같은 대화에서 계속 뽑아야 화풍이 이어진다.',
-         '2. **캐릭터 시트부터** 뽑는다. 마음에 든 그림을 저장해 두고, 인물이 나오는 프롬프트를 보낼 때 그 그림을 같이 올리며 '
+         '2. 인물이 나오는 프롬프트를 보낼 때는 **만들어 둔 캐릭터 시트**를 같이 올리며 '
          '"첨부한 인물과 같은 사람으로"를 앞에 붙인다.',
          '3. 각 블록은 그대로 복사해 보낸다. 화풍 문장이 블록 끝에 이미 들어 있다.',
          '4. 저장 이름은 제목의 `영문 이름.png`로, 레포의 `public/img/`에 넣는다.', '',

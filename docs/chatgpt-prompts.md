@@ -1,11 +1,11 @@
 # 103동 — ChatGPT 이미지 프롬프트
 
-> `python tools/chatgpt/build.py`로 만든 파일 (프롬프트 226개). 고칠 땐 `tools/chatgpt/build.py`를 고친다.
+> `python tools/chatgpt/build.py`로 만든 파일 (프롬프트 212개). 고칠 땐 `tools/chatgpt/build.py`를 고친다.
 
 ## 쓰는 법
 
 1. ChatGPT에서 **새 대화**를 열고, 아래 `대화 시작용 문장`을 먼저 보낸다. 같은 대화에서 계속 뽑아야 화풍이 이어진다.
-2. **캐릭터 시트부터** 뽑는다. 마음에 든 그림을 저장해 두고, 인물이 나오는 프롬프트를 보낼 때 그 그림을 같이 올리며 "첨부한 인물과 같은 사람으로"를 앞에 붙인다.
+2. 인물이 나오는 프롬프트를 보낼 때는 **만들어 둔 캐릭터 시트**를 같이 올리며 "첨부한 인물과 같은 사람으로"를 앞에 붙인다.
 3. 각 블록은 그대로 복사해 보낸다. 화풍 문장이 블록 끝에 이미 들어 있다.
 4. 저장 이름은 제목의 `영문 이름.png`로, 레포의 `public/img/`에 넣는다.
 
@@ -29,7 +29,6 @@ I am making illustrations for a story-driven game based on my own novel, a quiet
 | bg | 1536x1024 가로 | 가운데 띠를 1920×760으로 잘라 쓴다 |
 | fight | 1536x1024 가로 | 1920×1080으로 잘라 쓴다 |
 | cg | 1536x1024 가로 | 이벤트 그림. 1920×1080으로 잘라 쓴다 |
-| sheet | 1536x1024 가로 | 다른 그림을 뽑을 때 레퍼런스로 올린다 |
 | portrait | 1024x1536 세로 | 대화창 옆 서 있는 그림 |
 | enemy | 1024x1536 세로 | 1인칭 싸움 상대 |
 | item | 1024x1024 정사각 | 아이템 아이콘 |
@@ -38,112 +37,23 @@ I am making illustrations for a story-driven game based on my own novel, a quiet
 
 ## 목차
 
-- [1. 캐릭터 기준 시트](#1-캐릭터-기준-시트) — 14개
-- [2. 대화용 서 있는 그림 (투명 배경)](#2-대화용-서-있는-그림-투명-배경) — 21개
-- [3-1. 배경 — 한마음 아파트 단지 바깥](#3-1-배경--한마음-아파트-단지-바깥) — 21개
-- [3-2. 배경 — 103동 안 (공용 공간)](#3-2-배경--103동-안-공용-공간) — 16개
-- [3-3. 배경 — 세대 안](#3-3-배경--세대-안) — 24개
-- [3-4. 배경 — 동구시](#3-4-배경--동구시) — 14개
-- [3-5. 배경 — 백합여자고등학교](#3-5-배경--백합여자고등학교) — 9개
-- [3-6. 배경 — 회상](#3-6-배경--회상) — 6개
-- [4. 싸움 배경 (1인칭)](#4-싸움-배경-1인칭) — 12개
-- [5. 싸움 상대 (투명 배경)](#5-싸움-상대-투명-배경) — 13개
-- [6. 이벤트 그림 (1화~4화 결정적 장면)](#6-이벤트-그림-1화4화-결정적-장면) — 22개
-- [7. 태리의 주먹 (1인칭, 투명 배경)](#7-태리의-주먹-1인칭-투명-배경) — 5개
-- [8. 아이템 아이콘 (투명 배경)](#8-아이템-아이콘-투명-배경) — 37개
-- [9. UI · 타이틀](#9-ui--타이틀) — 12개
+- [1. 대화용 서 있는 그림 (투명 배경)](#1-대화용-서-있는-그림-투명-배경) — 21개
+- [2-1. 배경 — 한마음 아파트 단지 바깥](#2-1-배경--한마음-아파트-단지-바깥) — 21개
+- [2-2. 배경 — 103동 안 (공용 공간)](#2-2-배경--103동-안-공용-공간) — 16개
+- [2-3. 배경 — 세대 안](#2-3-배경--세대-안) — 24개
+- [2-4. 배경 — 동구시](#2-4-배경--동구시) — 14개
+- [2-5. 배경 — 백합여자고등학교](#2-5-배경--백합여자고등학교) — 9개
+- [2-6. 배경 — 회상](#2-6-배경--회상) — 6개
+- [3. 싸움 배경 (1인칭)](#3-싸움-배경-1인칭) — 12개
+- [4. 싸움 상대 (투명 배경)](#4-싸움-상대-투명-배경) — 13개
+- [5. 이벤트 그림 (1화~4화 결정적 장면)](#5-이벤트-그림-1화4화-결정적-장면) — 22개
+- [6. 태리의 주먹 (1인칭, 투명 배경)](#6-태리의-주먹-1인칭-투명-배경) — 5개
+- [7. 아이템 아이콘 (투명 배경)](#7-아이템-아이콘-투명-배경) — 37개
+- [8. UI · 타이틀](#8-ui--타이틀) — 12개
 
-## 1. 캐릭터 기준 시트
+## 1. 대화용 서 있는 그림 (투명 배경)
 
-가장 먼저 뽑는다. 마음에 드는 그림을 이후 대화에 올리고 "이 인물과 같게"라고 붙인다.
-
-### `char_taeri_uniform` — 태리 — 교복
-
-```
-Front, side and back views of Kang Taeri, a 27-year-old adult Korean woman and retired boxing champion, lean athletic build, short black hair in a low ponytail, black leather eyepatch over her left eye, calm tired right eye, wearing a navy sailor-collar school uniform with a red ribbon (she is an adult who enrolled in high school late), pleated navy skirt, pink backpack, both hands wrapped in white athletic tape. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_taeri_track` — 태리 — 검은 트레이닝복
-
-```
-Front, side and back views of Kang Taeri, a 27-year-old adult Korean woman and retired boxing champion, lean athletic build, short black hair in a low ponytail, black leather eyepatch over her left eye, calm tired right eye, wearing a black zip-up tracksuit, small red embroidered stitching on the back, both hands wrapped in white athletic tape, relaxed boxer stance with chin tucked. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_taeri_young` — 태리 — 현역 시절 (회상)
-
-```
-Front and side views of a 23-year-old Korean woman boxer at her peak, both eyes uncovered, short black ponytail, red boxing shorts and black top, red gloves, confident. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_doyun` — 도윤 — 평소
-
-```
-Front and side views of Han Doyun, a gentle Korean man in his early 30s, eyes that curve into half-moons when he smiles, white dress shirt, navy slacks, blue lanyard with a staff ID card, holding a stack of parcels, shy smile. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_doyun_ill` — 도윤 — 발병 후
-
-```
-Front and side views of the same man as before, now ill: ashen grey skin, deeply reddened eyes with tiny pupils, vacant expression, dark rust-brown stains on the clothes, unsteady posture, shirt collar stained, broken blue lanyard, one shoe missing and a worn grey sock. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_sehun` — 세훈
-
-```
-Front and side views of Jung Sehun, a tall thin Korean man around 30, ER nurse, white face mask, navy padded jacket, scrub pants, holding a red fire extinguisher, calm clinical posture. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_horyong` — 호룡 — 평소
-
-```
-Front and side views of Ma Horyong, a loud Korean gym owner in his 40s, huge muscular build, buzz cut, sleeveless tank top, track pants, gym towel around the neck, a scar over one closed eye, big grin. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_horyong_ill` — 호룡 — 발병 후
-
-```
-Front view of the same muscular gym owner, now ill: ashen grey skin, deeply reddened eyes with tiny pupils, vacant expression, dark rust-brown stains on the clothes, unsteady posture, torn tank top, towel still around the neck. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_dad` — 아빠
-
-```
-Front and side views of Taeri's father, a Korean boxing coach in his late 50s, weathered stern face, grey crew cut, faded windbreaker, focus mitts under one arm. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_dad_young` — 아빠 — 젊은 시절 (회상)
-
-```
-Front view of a Korean boxing coach in his 40s, firm build, black hair, windbreaker, holding focus mitts, slight smile, harbor background hint. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_rider` — 노란 머리 배달 라이더
-
-```
-Front and side views of a cheerful young Korean delivery rider with dyed yellow hair, helmet under arm, insulated delivery backpack, rain jacket. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_canteen` — 매점 아주머니
-
-```
-Front view of a warm Korean woman in her 50s who runs a school snack shop, apron, cardigan, permed hair. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_guard` — 경비 아저씨
-
-```
-Front view of an elderly Korean apartment security guard in a navy uniform and cap, kind face. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-### `char_neighbors` — 103동 주민들 (단역 모음)
-
-```
-A lineup of six ordinary Korean apartment residents of different ages: an elderly woman with a cane, a middle-aged man in a cardigan, a young mother, a college student in a hoodie, an office worker in a suit, a retired man in a fishing vest. Plain grey background. Character reference sheet on a plain light grey background, full body, consistent proportions across views. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
-```
-
-## 2. 대화용 서 있는 그림 (투명 배경)
-
-대사 장면에서 글상자 옆에 세운다. 캐릭터 시트를 같이 올리고 뽑는다.
+대사 장면에서 글상자 옆에 세운다. 만들어 둔 캐릭터 시트를 같이 올리고 뽑는다.
 
 ### `pt_taeri_track_neutral` — 태리(트레이닝복) — 무표정
 
@@ -271,7 +181,7 @@ Taeri's father, a Korean boxing coach in his late 50s, weathered stern face, gre
 A cheerful young Korean delivery rider with dyed yellow hair, helmet under arm, handing over a food bag with a grin. Portrait image (2:3), waist-up, facing slightly toward the viewer, transparent background. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 3-1. 배경 — 한마음 아파트 단지 바깥
+## 2-1. 배경 — 한마음 아파트 단지 바깥
 
 ### `bg_complex_dawn` — 단지 전경 — 새벽 해무
 
@@ -399,7 +309,7 @@ The rooftop of an apartment tower at night, the dark city below with a few fires
 A rooftop water tank room, large blue tanks, pipes and valves, a single bulb. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 3-2. 배경 — 103동 안 (공용 공간)
+## 2-2. 배경 — 103동 안 (공용 공간)
 
 ### `bg_lobby` — 1층 로비
 
@@ -497,7 +407,7 @@ An apartment basement machine room with an electrical panel, generators, pipes, 
 The top of an apartment stairwell with a metal rooftop door, daylight leaking around the edges, a padlock hanging open. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 3-3. 배경 — 세대 안
+## 2-3. 배경 — 세대 안
 
 ### `bg_1502_door` — 1502호 현관 안쪽
 
@@ -643,7 +553,7 @@ A family apartment living room with a child's drawings on the fridge, a small te
 An apartment living room converted into a shared shelter, sleeping mats lined up, a table with water bottles and canned food sorted, a whiteboard with blank lines. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 3-4. 배경 — 동구시
+## 2-4. 배경 — 동구시
 
 대본에 이름이 나온 장소와, 바깥으로 나가면 필요할 곳.
 
@@ -731,7 +641,7 @@ A long hospital corridor at night, flickering lights, wheelchairs left against t
 A long bridge out of a Korean port city, cars jammed and abandoned, a military checkpoint at the far end, overcast. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 3-5. 배경 — 백합여자고등학교
+## 2-5. 배경 — 백합여자고등학교
 
 학생이 위험에 처한 모습은 검열에 걸리기 쉬우니, 학교 배경은 사람 없이 뽑는다.
 
@@ -789,7 +699,7 @@ A small school snack shop counter with snacks and stationery, name tags on a dis
 The rooftop of a school building, railings, a view of the port city and the sea. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 3-6. 배경 — 회상
+## 2-6. 배경 — 회상
 
 ### `bg_flash_boxing_gym` — 아빠의 복싱 체육관
 
@@ -827,7 +737,7 @@ A middle school corridor in spring, sepia nostalgic tone, an empty hallway and a
 A dim apartment room, a phone lying face up on the floor with a glowing blank screen, crumpled resumes, night. Wide landscape image (3:2). An empty location with no people unless described. Keep the important content in the middle horizontal band, since the top and bottom will be cropped. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 4. 싸움 배경 (1인칭)
+## 3. 싸움 배경 (1인칭)
 
 태리의 왼쪽 눈은 보이지 않아서 왼쪽 ⅓을 어둡게 뽑는다.
 
@@ -903,7 +813,7 @@ A city street between abandoned cars, overcast. Wide landscape image (3:2). Firs
 A harbor pier with ropes and bollards, grey sea. Wide landscape image (3:2). First-person eye-level view as if standing there. No people. The left third of the image fades into deep shadow. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 5. 싸움 상대 (투명 배경)
+## 4. 싸움 상대 (투명 배경)
 
 같은 대화에서 원본을 뽑은 뒤, 마지막 항목처럼 "같은 인물, 이번엔 ~" 으로 동작 변형을 뽑는다.
 
@@ -985,7 +895,7 @@ A person afflicted by a mysterious illness: a massive Korean bodybuilder in a to
 Same character as the previous image, now: pulling one arm back for a wide swipe / lunging forward with mouth open / both hands thrust forward to grab / head snapped back from a punch / falling backward. Portrait image (2:3), waist-up, facing the viewer straight on, transparent background, light from the right. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 6. 이벤트 그림 (1화~4화 결정적 장면)
+## 5. 이벤트 그림 (1화~4화 결정적 장면)
 
 ### `cg_dawn_run` — 1화 — 새벽 달리기
 
@@ -1119,7 +1029,7 @@ A 13-year-old Korean girl learning to tie a rope knot from her smiling father on
 Kang Taeri, a 27-year-old adult Korean woman and retired boxing champion, lean athletic build, short black hair in a low ponytail, black leather eyepatch over her left eye, calm tired right eye, at her apartment door receiving a food delivery from a grinning yellow-haired rider, warm evening light. Wide landscape image (3:2), a single dramatic story illustration panel. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 7. 태리의 주먹 (1인칭, 투명 배경)
+## 6. 태리의 주먹 (1인칭, 투명 배경)
 
 ### `hud_fist_left` — 왼 주먹 — 교복
 
@@ -1151,7 +1061,7 @@ A woman's right fist and forearm rising from the bottom right corner in a boxing
 A woman's taped fist punching straight forward away from the viewer, motion blur, first-person view. Square image, transparent background, the arm enters from the frame edge as described. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 8. 아이템 아이콘 (투명 배경)
+## 7. 아이템 아이콘 (투명 배경)
 
 글자가 들어가는 물건은 비워 두고 게임에서 글자를 얹는다.
 
@@ -1377,7 +1287,7 @@ A black zip-up tracksuit jacket folded, small red stitching on the back. Square 
 A navy sailor-collar school uniform sealed in a clear plastic bag, tied twice. Square image, a single object centered with a soft shadow, transparent background, game item icon. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
 ```
 
-## 9. UI · 타이틀
+## 8. UI · 타이틀
 
 ### `title_key` — 타이틀 키 아트
 
