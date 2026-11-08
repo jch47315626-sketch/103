@@ -5,7 +5,14 @@ import files from 'virtual:img-list';
 import slots from './imageSlots.json';
 
 const SLOT_FILES = new Map<string, string[]>();
-for (const g of slots.groups) for (const s of g.slots) SLOT_FILES.set(s.slot, s.files);
+/** 그림 위에 게임이 얹는 글자 (이미지 모델은 글자를 못 쓰므로) */
+const SLOT_OVERLAY = new Map<string, string>();
+for (const g of slots.groups) for (const s of g.slots as { slot: string; files: string[]; overlay?: string }[]) {
+  SLOT_FILES.set(s.slot, s.files);
+  if (s.overlay) SLOT_OVERLAY.set(s.slot, s.overlay);
+}
+
+export function slotOverlay(slot: string): string | undefined { return SLOT_OVERLAY.get(slot); }
 
 /** 이름(확장자 뺀 것) → 파일 이름 */
 const AVAILABLE = new Map<string, string>();

@@ -1,6 +1,6 @@
 // 이야기 장면 진행기: 대본(script.ts)을 한 장면씩 보여 주고, 손잡이·붕대·전투 같은 순간은 직접 하게 한다.
 import Phaser from 'phaser';
-import { coverImage, fitHeight, slotKey } from '../game/images';
+import { coverImage, fitHeight, slotKey, slotOverlay } from '../game/images';
 import { sfx } from '../game/sfx';
 import { button, C, H, HEX, text, title, W } from '../game/theme';
 import { drawBg } from './backgrounds';
@@ -394,6 +394,8 @@ export class StoryScene extends Phaser.Scene {
       const im = this.add.image(-200, 0, icon);
       im.setScale(90 / Math.max(im.width, im.height));
       card.add(im);
+      const label = slotOverlay(`item:${beat.icon}`);
+      if (label) card.add(text(this, -200, 0, label, 12, '#ffffff', { fontStyle: '700', stroke: '#000', strokeThickness: 3 }).setOrigin(0.5));
       [a, b, c].forEach((o) => o.setX(50));
       c.setWordWrapWidth(380);
     }

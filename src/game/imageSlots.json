@@ -5,119 +5,567 @@
       "name": "1. 이야기 배경 — 없으면 장면이 도형 그림으로 나온다",
       "size": "1536x1024 가로 → 가운데 띠를 잘라 쓴다",
       "slots": [
-        { "slot": "bg:dawn", "files": ["bg_complex_dawn", "bg_dawn"], "use": "1화 첫 장면, 새벽 해무" },
-        { "slot": "bg:mirror", "files": ["bg_1502_bath", "bg_mirror"], "use": "1화 안대를 묶는 거울" },
-        { "slot": "bg:door", "files": ["bg_1502_door", "bg_door"], "use": "1화 열지 못한 문 · 2·3화 현관" },
-        { "slot": "bg:peep", "files": ["bg_peephole_1", "bg_peep"], "use": "1화 외시경 너머 도윤" },
-        { "slot": "bg:peep1501", "files": ["bg_peephole_2", "bg_peep1501"], "use": "1화 외시경 너머 1501호 남자" },
-        { "slot": "bg:hall", "files": ["bg_hall15", "bg_hall"], "use": "1·2·3화 15층 복도" },
-        { "slot": "bg:stairsDown", "files": ["bg_stair_down", "bg_stairsDown"], "use": "2화 난간 틈으로 본 나선 계단" },
-        { "slot": "bg:stairs", "files": ["bg_stair_landing", "bg_stairs"], "use": "3화 계단참" },
-        { "slot": "bg:kitchen", "files": ["bg_1502_kitchen", "bg_kitchen"], "use": "2화 생수 여섯 병" },
-        { "slot": "bg:night", "files": ["bg_1502_living_night", "bg_night"], "use": "2화 불 끈 밤" },
-        { "slot": "bg:firedoor", "files": ["bg_firedoor"], "use": "2·3화 철망 유리창 너머 세훈" },
-        { "slot": "bg:r1208", "files": ["bg_1208", "bg_r1208"], "use": "3화 세훈의 1208호" },
-        { "slot": "bg:balcony", "files": ["bg_1502_balcony", "bg_balcony"], "use": "3화 베란다 칸막이" },
-        { "slot": "bg:b1503", "files": ["bg_1503_balcony", "bg_b1503"], "use": "4화 숲 같은 베란다" },
-        { "slot": "bg:r1503", "files": ["bg_1503_living", "bg_r1503"], "use": "4화 1503호 살펴보기 (왼쪽부터 화분 · 코르크 보드 · 냉장고 · 찬장 · 서재 문)" },
-        { "slot": "bg:desk", "files": ["bg_1503_study", "bg_desk"], "use": "4화 서재 책상의 편지" },
-        { "slot": "bg:closet", "files": ["bg_1503_closet", "bg_closet"], "use": "4화 트레이닝복 옷장" },
-        { "slot": "bg:dining", "files": ["bg_1503_dining", "bg_dining"], "use": "4화 장조림 식탁" }
+        {
+          "slot": "bg:dawn",
+          "files": [
+            "bg_complex_dawn",
+            "bg_dawn"
+          ],
+          "use": "1화 첫 장면, 새벽 해무"
+        },
+        {
+          "slot": "bg:mirror",
+          "files": [
+            "bg_1502_bath",
+            "bg_mirror"
+          ],
+          "use": "1화 안대를 묶는 거울"
+        },
+        {
+          "slot": "bg:door",
+          "files": [
+            "bg_1502_door",
+            "bg_door"
+          ],
+          "use": "1화 열지 못한 문 · 2·3화 현관"
+        },
+        {
+          "slot": "bg:peep",
+          "files": [
+            "bg_peephole_1",
+            "bg_peep"
+          ],
+          "use": "1화 외시경 너머 도윤"
+        },
+        {
+          "slot": "bg:peep1501",
+          "files": [
+            "bg_peephole_2",
+            "bg_peep1501"
+          ],
+          "use": "1화 외시경 너머 1501호 남자"
+        },
+        {
+          "slot": "bg:hall",
+          "files": [
+            "bg_hall15",
+            "bg_hall"
+          ],
+          "use": "1·2·3화 15층 복도"
+        },
+        {
+          "slot": "bg:stairsDown",
+          "files": [
+            "bg_stair_down",
+            "bg_stairsDown"
+          ],
+          "use": "2화 난간 틈으로 본 나선 계단"
+        },
+        {
+          "slot": "bg:stairs",
+          "files": [
+            "bg_stair_landing",
+            "bg_stairs"
+          ],
+          "use": "3화 계단참"
+        },
+        {
+          "slot": "bg:kitchen",
+          "files": [
+            "bg_1502_kitchen",
+            "bg_kitchen"
+          ],
+          "use": "2화 생수 여섯 병"
+        },
+        {
+          "slot": "bg:night",
+          "files": [
+            "bg_1502_living_night",
+            "bg_night"
+          ],
+          "use": "2화 불 끈 밤"
+        },
+        {
+          "slot": "bg:firedoor",
+          "files": [
+            "bg_firedoor"
+          ],
+          "use": "2·3화 철망 유리창 너머 세훈"
+        },
+        {
+          "slot": "bg:r1208",
+          "files": [
+            "bg_1208",
+            "bg_r1208"
+          ],
+          "use": "3화 세훈의 1208호"
+        },
+        {
+          "slot": "bg:balcony",
+          "files": [
+            "bg_1502_balcony",
+            "bg_balcony"
+          ],
+          "use": "3화 베란다 칸막이"
+        },
+        {
+          "slot": "bg:b1503",
+          "files": [
+            "bg_1503_balcony",
+            "bg_b1503"
+          ],
+          "use": "4화 숲 같은 베란다"
+        },
+        {
+          "slot": "bg:r1503",
+          "files": [
+            "bg_1503_living",
+            "bg_r1503"
+          ],
+          "use": "4화 1503호 살펴보기 (왼쪽부터 화분 · 코르크 보드 · 냉장고 · 찬장 · 서재 문)"
+        },
+        {
+          "slot": "bg:desk",
+          "files": [
+            "bg_1503_study",
+            "bg_desk"
+          ],
+          "use": "4화 서재 책상의 편지"
+        },
+        {
+          "slot": "bg:closet",
+          "files": [
+            "bg_1503_closet",
+            "bg_closet"
+          ],
+          "use": "4화 트레이닝복 옷장"
+        },
+        {
+          "slot": "bg:dining",
+          "files": [
+            "bg_1503_dining",
+            "bg_dining"
+          ],
+          "use": "4화 장조림 식탁"
+        }
       ]
     },
     {
       "name": "2. 싸움 배경 (1인칭) — 왼쪽 ⅓은 어둡게",
       "size": "1536x1024 가로",
       "slots": [
-        { "slot": "fight:hall", "files": ["fight_hall"], "use": "1화 1501호 남자" },
-        { "slot": "fight:stairs", "files": ["fight_stairs"], "use": "2화 계단참 · 14층 · 3화 도윤" },
-        { "slot": "fight:room", "files": ["fight_room"], "use": "2화 새벽 네 시 섀도복싱" },
-        { "slot": "fight:wall", "files": ["fight_wall"], "use": "3화 베란다 칸막이" }
+        {
+          "slot": "fight:hall",
+          "files": [
+            "fight_hall"
+          ],
+          "use": "1화 1501호 남자"
+        },
+        {
+          "slot": "fight:stairs",
+          "files": [
+            "fight_stairs"
+          ],
+          "use": "2화 계단참 · 14층 · 3화 도윤"
+        },
+        {
+          "slot": "fight:room",
+          "files": [
+            "fight_room"
+          ],
+          "use": "2화 새벽 네 시 섀도복싱"
+        },
+        {
+          "slot": "fight:wall",
+          "files": [
+            "fight_wall"
+          ],
+          "use": "3화 베란다 칸막이"
+        }
       ]
     },
     {
       "name": "3. 싸움 상대 (투명 배경)",
       "size": "1024x1536 세로, 투명 배경",
       "slots": [
-        { "slot": "enemy:suit1501", "files": ["enemy_suit1501"], "use": "1화 1501호 남자" },
-        { "slot": "enemy:suitStairs", "files": ["enemy_suit_stairs", "enemy_suitStairs"], "use": "2화 계단참 정장 남자" },
-        { "slot": "enemy:apron", "files": ["enemy_apron"], "use": "2화 14층 앞치마 여자" },
-        { "slot": "enemy:doyun", "files": ["enemy_doyun"], "use": "3화 12층 계단참의 도윤" },
-        { "slot": "enemy:normal", "files": ["enemy_resident", "enemy_normal"], "use": "연습 전투: 일반" },
-        { "slot": "enemy:crawler", "files": ["enemy_crawler"], "use": "연습 전투: 기어 오는" },
-        { "slot": "enemy:horyong", "files": ["enemy_horyong"], "use": "연습 전투: 호룡" }
+        {
+          "slot": "enemy:suit1501",
+          "files": [
+            "enemy_suit1501"
+          ],
+          "use": "1화 1501호 남자"
+        },
+        {
+          "slot": "enemy:suitStairs",
+          "files": [
+            "enemy_suit_stairs",
+            "enemy_suitStairs"
+          ],
+          "use": "2화 계단참 정장 남자"
+        },
+        {
+          "slot": "enemy:apron",
+          "files": [
+            "enemy_apron"
+          ],
+          "use": "2화 14층 앞치마 여자"
+        },
+        {
+          "slot": "enemy:doyun",
+          "files": [
+            "enemy_doyun"
+          ],
+          "use": "3화 12층 계단참의 도윤"
+        },
+        {
+          "slot": "enemy:normal",
+          "files": [
+            "enemy_resident",
+            "enemy_normal"
+          ],
+          "use": "연습 전투: 일반"
+        },
+        {
+          "slot": "enemy:crawler",
+          "files": [
+            "enemy_crawler"
+          ],
+          "use": "연습 전투: 기어 오는"
+        },
+        {
+          "slot": "enemy:horyong",
+          "files": [
+            "enemy_horyong"
+          ],
+          "use": "연습 전투: 호룡"
+        }
       ]
     },
     {
       "name": "4. 이벤트 그림 — 결정적 장면에 화면 가득 뜬다",
       "size": "1536x1024 가로",
       "slots": [
-        { "slot": "cg:cg_dawn_run", "files": ["cg_dawn_run"], "use": "1화 새벽 달리기" },
-        { "slot": "cg:cg_eyepatch", "files": ["cg_eyepatch"], "use": "1화 안대를 묶는 아침" },
-        { "slot": "cg:cg_flash_belt", "files": ["cg_flash_belt"], "use": "1화 회상: 챔피언 벨트" },
-        { "slot": "cg:cg_door_handle", "files": ["cg_door_handle"], "use": "1화 열지 못한 문" },
-        { "slot": "cg:cg_id_card", "files": ["cg_id_card"], "use": "1화 사원증" },
-        { "slot": "cg:cg_taping", "files": ["cg_taping"], "use": "1화 붕대 감기" },
-        { "slot": "cg:cg_wall_shoulder", "files": ["cg_wall_shoulder"], "use": "1화 끝, 왼쪽은 벽에" },
-        { "slot": "cg:cg_necktie", "files": ["cg_necktie"], "use": "2화 넥타이 매듭" },
-        { "slot": "cg:cg_flash_harbor", "files": ["cg_flash_harbor"], "use": "2화 회상: 부두의 매듭" },
-        { "slot": "cg:cg_six_bottles", "files": ["cg_six_bottles"], "use": "2화 생수 여섯 병" },
-        { "slot": "cg:cg_flash_rider", "files": ["cg_flash_rider"], "use": "2화 회상: 맛있게 드세요, 챔피언" },
-        { "slot": "cg:cg_shadowbox", "files": ["cg_shadowbox"], "use": "2화 새벽 네 시" },
-        { "slot": "cg:cg_firedoor_face", "files": ["cg_firedoor_face"], "use": "2화 철망 유리창 너머" },
-        { "slot": "cg:cg_stairs_back", "files": ["cg_stairs_back"], "use": "3화 계단참의 그 사람" },
-        { "slot": "cg:cg_clinch", "files": ["cg_clinch"], "use": "3화 클린치 직후" },
-        { "slot": "cg:cg_cup_noodle", "files": ["cg_cup_noodle"], "use": "3화 컵라면" },
-        { "slot": "cg:cg_wall_punch", "files": ["cg_wall_punch"], "use": "3화 끝, 베란다 칸막이" },
-        { "slot": "cg:cg_forest_balcony", "files": ["cg_forest_balcony"], "use": "4화 숲 같은 베란다" },
-        { "slot": "cg:cg_letter", "files": ["cg_letter"], "use": "4화 편지" },
-        { "slot": "cg:cg_track_zip", "files": ["cg_track_zip"], "use": "4화 트레이닝복" },
-        { "slot": "cg:cg_dinner", "files": ["cg_dinner"], "use": "4화 장조림" },
-        { "slot": "cg:cg_horyong_call", "files": ["cg_horyong_call"], "use": "4화 아래층의 목소리" }
+        {
+          "slot": "cg:cg_dawn_run",
+          "files": [
+            "cg_dawn_run"
+          ],
+          "use": "1화 새벽 달리기"
+        },
+        {
+          "slot": "cg:cg_eyepatch",
+          "files": [
+            "cg_eyepatch"
+          ],
+          "use": "1화 안대를 묶는 아침"
+        },
+        {
+          "slot": "cg:cg_flash_belt",
+          "files": [
+            "cg_flash_belt"
+          ],
+          "use": "1화 회상: 챔피언 벨트"
+        },
+        {
+          "slot": "cg:cg_door_handle",
+          "files": [
+            "cg_door_handle"
+          ],
+          "use": "1화 열지 못한 문"
+        },
+        {
+          "slot": "cg:cg_id_card",
+          "files": [
+            "cg_id_card"
+          ],
+          "use": "1화 사원증"
+        },
+        {
+          "slot": "cg:cg_taping",
+          "files": [
+            "cg_taping"
+          ],
+          "use": "1화 붕대 감기"
+        },
+        {
+          "slot": "cg:cg_wall_shoulder",
+          "files": [
+            "cg_wall_shoulder"
+          ],
+          "use": "1화 끝, 왼쪽은 벽에"
+        },
+        {
+          "slot": "cg:cg_necktie",
+          "files": [
+            "cg_necktie"
+          ],
+          "use": "2화 넥타이 매듭"
+        },
+        {
+          "slot": "cg:cg_flash_harbor",
+          "files": [
+            "cg_flash_harbor"
+          ],
+          "use": "2화 회상: 부두의 매듭"
+        },
+        {
+          "slot": "cg:cg_six_bottles",
+          "files": [
+            "cg_six_bottles"
+          ],
+          "use": "2화 생수 여섯 병"
+        },
+        {
+          "slot": "cg:cg_flash_rider",
+          "files": [
+            "cg_flash_rider"
+          ],
+          "use": "2화 회상: 맛있게 드세요, 챔피언"
+        },
+        {
+          "slot": "cg:cg_shadowbox",
+          "files": [
+            "cg_shadowbox"
+          ],
+          "use": "2화 새벽 네 시"
+        },
+        {
+          "slot": "cg:cg_firedoor_face",
+          "files": [
+            "cg_firedoor_face"
+          ],
+          "use": "2화 철망 유리창 너머"
+        },
+        {
+          "slot": "cg:cg_stairs_back",
+          "files": [
+            "cg_stairs_back"
+          ],
+          "use": "3화 계단참의 그 사람"
+        },
+        {
+          "slot": "cg:cg_clinch",
+          "files": [
+            "cg_clinch"
+          ],
+          "use": "3화 클린치 직후"
+        },
+        {
+          "slot": "cg:cg_cup_noodle",
+          "files": [
+            "cg_cup_noodle"
+          ],
+          "use": "3화 컵라면"
+        },
+        {
+          "slot": "cg:cg_wall_punch",
+          "files": [
+            "cg_wall_punch"
+          ],
+          "use": "3화 끝, 베란다 칸막이"
+        },
+        {
+          "slot": "cg:cg_forest_balcony",
+          "files": [
+            "cg_forest_balcony"
+          ],
+          "use": "4화 숲 같은 베란다"
+        },
+        {
+          "slot": "cg:cg_letter",
+          "files": [
+            "cg_letter"
+          ],
+          "use": "4화 편지"
+        },
+        {
+          "slot": "cg:cg_track_zip",
+          "files": [
+            "cg_track_zip"
+          ],
+          "use": "4화 트레이닝복"
+        },
+        {
+          "slot": "cg:cg_dinner",
+          "files": [
+            "cg_dinner"
+          ],
+          "use": "4화 장조림"
+        },
+        {
+          "slot": "cg:cg_horyong_call",
+          "files": [
+            "cg_horyong_call"
+          ],
+          "use": "4화 아래층의 목소리"
+        }
       ]
     },
     {
       "name": "5. 대화용 서 있는 그림 (투명 배경)",
       "size": "1024x1536 세로, 투명 배경",
       "slots": [
-        { "slot": "pt:pt_taeri_uni_neutral", "files": ["pt_taeri_uni_neutral"], "use": "1~3화 태리 (교복)" },
-        { "slot": "pt:pt_taeri_uni_sad", "files": ["pt_taeri_uni_sad"], "use": "1화 미안해, 3화 오빠" },
-        { "slot": "pt:pt_taeri_track_neutral", "files": ["pt_taeri_track_neutral"], "use": "4화 태리 (트레이닝복)" },
-        { "slot": "pt:pt_taeri_track_determined", "files": ["pt_taeri_track_determined"], "use": "4화 끝, 빼 와야죠" },
-        { "slot": "pt:pt_sehun_neutral", "files": ["pt_sehun_neutral"], "use": "2~4화 세훈" },
-        { "slot": "pt:pt_sehun_serious", "files": ["pt_sehun_serious"], "use": "3화 감정으로 판단하면" },
-        { "slot": "pt:pt_sehun_soft", "files": ["pt_sehun_soft"], "use": "4화 맛있네요" },
-        { "slot": "pt:pt_doyun_smile", "files": ["pt_doyun_smile"], "use": "1화 회상: 서류는 같이 보자" },
-        { "slot": "pt:pt_dad_stern", "files": ["pt_dad_stern"], "use": "2화 아빠의 목소리" },
-        { "slot": "pt:pt_horyong_shout", "files": ["pt_horyong_shout"], "use": "4화 아래층의 호룡" }
+        {
+          "slot": "pt:pt_taeri_uni_neutral",
+          "files": [
+            "pt_taeri_uni_neutral"
+          ],
+          "use": "1~3화 태리 (교복)"
+        },
+        {
+          "slot": "pt:pt_taeri_uni_sad",
+          "files": [
+            "pt_taeri_uni_sad"
+          ],
+          "use": "1화 미안해, 3화 오빠"
+        },
+        {
+          "slot": "pt:pt_taeri_track_neutral",
+          "files": [
+            "pt_taeri_track_neutral"
+          ],
+          "use": "4화 태리 (트레이닝복)"
+        },
+        {
+          "slot": "pt:pt_taeri_track_determined",
+          "files": [
+            "pt_taeri_track_determined"
+          ],
+          "use": "4화 끝, 빼 와야죠"
+        },
+        {
+          "slot": "pt:pt_sehun_neutral",
+          "files": [
+            "pt_sehun_neutral"
+          ],
+          "use": "2~4화 세훈"
+        },
+        {
+          "slot": "pt:pt_sehun_serious",
+          "files": [
+            "pt_sehun_serious"
+          ],
+          "use": "3화 감정으로 판단하면"
+        },
+        {
+          "slot": "pt:pt_sehun_soft",
+          "files": [
+            "pt_sehun_soft"
+          ],
+          "use": "4화 맛있네요"
+        },
+        {
+          "slot": "pt:pt_doyun_smile",
+          "files": [
+            "pt_doyun_smile"
+          ],
+          "use": "1화 회상: 서류는 같이 보자"
+        },
+        {
+          "slot": "pt:pt_dad_stern",
+          "files": [
+            "pt_dad_stern"
+          ],
+          "use": "2화 아빠의 목소리"
+        },
+        {
+          "slot": "pt:pt_horyong_shout",
+          "files": [
+            "pt_horyong_shout"
+          ],
+          "use": "4화 아래층의 호룡"
+        }
       ]
     },
     {
       "name": "6. 태리의 주먹 (1인칭, 투명 배경)",
       "size": "1024x1024, 투명 배경",
       "slots": [
-        { "slot": "fist:left", "files": ["hud_fist_left"], "use": "싸움 화면 왼 주먹 (교복)" },
-        { "slot": "fist:right", "files": ["hud_fist_right"], "use": "싸움 화면 오른 주먹 (교복)" },
-        { "slot": "fist:left_track", "files": ["hud_fist_left_track"], "use": "연습 전투 왼 주먹 (트레이닝복)" },
-        { "slot": "fist:right_track", "files": ["hud_fist_right_track"], "use": "연습 전투 오른 주먹 (트레이닝복)" }
+        {
+          "slot": "fist:left",
+          "files": [
+            "hud_fist_left"
+          ],
+          "use": "싸움 화면 왼 주먹 (교복)"
+        },
+        {
+          "slot": "fist:right",
+          "files": [
+            "hud_fist_right"
+          ],
+          "use": "싸움 화면 오른 주먹 (교복)"
+        },
+        {
+          "slot": "fist:left_track",
+          "files": [
+            "hud_fist_left_track"
+          ],
+          "use": "연습 전투 왼 주먹 (트레이닝복)"
+        },
+        {
+          "slot": "fist:right_track",
+          "files": [
+            "hud_fist_right_track"
+          ],
+          "use": "연습 전투 오른 주먹 (트레이닝복)"
+        }
       ]
     },
     {
       "name": "7. 아이템 아이콘 (투명 배경)",
       "size": "1024x1024, 투명 배경",
       "slots": [
-        { "slot": "item:item_idcard", "files": ["item_idcard"], "use": "도윤의 사원증" },
-        { "slot": "item:item_ramen", "files": ["item_ramen"], "use": "1503호의 식량" },
-        { "slot": "item:item_nametag", "files": ["item_nametag"], "use": "명찰 1-3 강태리" },
-        { "slot": "item:item_letter", "files": ["item_letter"], "use": "도윤의 편지" }
+        {
+          "slot": "item:item_idcard",
+          "files": [
+            "item_idcard"
+          ],
+          "use": "도윤의 사원증"
+        },
+        {
+          "slot": "item:item_ramen",
+          "files": [
+            "item_ramen"
+          ],
+          "use": "1503호의 식량"
+        },
+        {
+          "slot": "item:item_nametag",
+          "files": [
+            "item_nametag"
+          ],
+          "use": "명찰 1-3 강태리",
+          "overlay": "1-3 강태리"
+        },
+        {
+          "slot": "item:item_letter",
+          "files": [
+            "item_letter"
+          ],
+          "use": "도윤의 편지"
+        }
       ]
     },
     {
       "name": "8. 타이틀",
       "size": "1536x1024 가로",
       "slots": [
-        { "slot": "title", "files": ["title_key_ch1", "title_key", "title_bg_loop"], "use": "처음 화면 (왼쪽 ⅓은 제목 자리)" },
-        { "slot": "chapter_card", "files": ["chapter_card_bg"], "use": "화 제목 카드 배경" }
+        {
+          "slot": "title",
+          "files": [
+            "title_key_ch1",
+            "title_key",
+            "title_bg_loop"
+          ],
+          "use": "처음 화면 (왼쪽 ⅓은 제목 자리)"
+        },
+        {
+          "slot": "chapter_card",
+          "files": [
+            "chapter_card_bg"
+          ],
+          "use": "화 제목 카드 배경"
+        }
       ]
     }
   ]

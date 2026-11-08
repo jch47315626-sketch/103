@@ -97,8 +97,16 @@ def load_ch14_jobs(cfg: dict) -> list[dict]:
     return jobs
 
 
+# 이미지 모델은 글자를 제대로 못 쓴다(특히 한글). 글씨가 생길 만한 물건은 비워 두게 하고, 글자는 게임이 얹는다.
+TEXTY = ('sign', 'label', 'masking tape', 'handwrit', 'letter', 'envelope', 'name tag', 'nameplate', 'plate',
+         'note', 'id card', 'card', 'sticker', 'poster', 'calendar', 'newspaper', 'screen', 'number')
+NO_TEXT = 'every sign, label, note, card and paper is blank or shows only faint unreadable marks, no readable writing'
+
+
 def full_prompt(cfg: dict, job: dict) -> str:
     kind = job['kindcfg']
+    if any(t in job['prompt'].lower() for t in TEXTY):
+        job = dict(job, prompt=f"{job['prompt']}, {NO_TEXT}")
     suffix = kind.get('suffixPeople', kind.get('suffix', '')) if job.get('people') else kind.get('suffix', '')
     parts = [cfg['style'], job['prompt'], suffix]
     return ', '.join(p for p in parts if p)

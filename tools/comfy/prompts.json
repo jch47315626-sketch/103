@@ -1,6 +1,6 @@
 {
   "style": "Korean webtoon illustration, semi-realistic, clean ink lines with soft cel shading, cold desaturated palette (concrete grey, night navy, sickly green emergency light), small accents of warm orange and blood red, cinematic lighting, quiet dread, Korean apartment complex survival drama, no text, no watermark, no logo",
-  "negative": "text, letters, watermark, signature, logo, extra fingers, deformed hands, bad anatomy, cartoonish chibi, bright saturated colors, gore close-up, exposed organs, anime moe style, two eyepatches, lowres, blurry, jpeg artifacts",
+  "negative": "text, letters, watermark, signature, logo, extra fingers, deformed hands, bad anatomy, cartoonish chibi, bright saturated colors, gore close-up, exposed organs, anime moe style, two eyepatches, lowres, blurry, jpeg artifacts, writing, words, numbers, captions, speech bubble, signage text, gibberish text, korean characters, chinese characters, kanji, english letters",
   "kinds": {
     "sheet": {
       "gen": [
