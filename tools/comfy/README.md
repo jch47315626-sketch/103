@@ -10,7 +10,7 @@ tools/comfy/README.md 의 "내 PC의 Claude Code에게 맡기기" 순서대로 �
 1. git fetch 하고 claude/amazing-brahmagupta-ww97bn 브랜치로 바꿔.
 2. ComfyUI가 http://127.0.0.1:8188 에서 켜져 있는지 확인해. 꺼져 있으면 이 PC에서 ComfyUI가 어디 있는지 찾아서 켜 줘. 새로 설치나 모델 내려받기가 필요하면 하기 전에 나한테 물어봐.
 3. pip install pillow "rembg[cpu]"
-4. 모델: ComfyUI/models/checkpoints 에 Animagine XL 4.0 이 없으면, 받아도 되는지 나한테 묻고 https://huggingface.co/CagliostroLab/Animagine-XL-4.0 의 Files 탭에서 .safetensors 체크포인트(약 7GB)를 받아 그 폴더에 넣어 줘. 파일이 여러 개면 모델 카드에서 권장하는 것으로.
+4. 모델: ComfyUI/models/checkpoints 에 animagine-xl-4.0-opt.safetensors 가 없으면, 받아도 되는지 나한테 묻고 https://huggingface.co/cagliostrolab/animagine-xl-4.0/resolve/main/animagine-xl-4.0-opt.safetensors?download=true (6.94GB) 를 받아 그 폴더에 넣어 줘. 이후 --ckpt animagine-xl-4.0-opt.safetensors 로 쓴다.
    모델 카드의 권장 프롬프트 형식(품질 태그, 권장 설정)을 읽고, 필요하면 --steps --cfg --sampler 를 거기에 맞춰.
    그다음 python tools/comfy/generate.py --dry-run 으로 체크포인트 목록에 보이는지 확인해.
 5. 시험으로 3장만: python tools/comfy/generate.py --ckpt <모델> --set ch1-4 --only bg_dawn --only cg_door_handle --only enemy_suit1501 --format webp
