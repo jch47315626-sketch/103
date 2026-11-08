@@ -4,6 +4,8 @@
 프롬프트는 이미지 모델이 가장 잘 알아듣는 **영어**로 쓰고, 위에 한국어로 무엇을 그리는지 적었다.
 각 항목의 `파일명`은 코드에서 바꿔 끼울 때 쓸 이름이다(`Bg` 키, 적 `look` 키와 같다).
 
+> **ChatGPT용 (검열 안전, 전체 226개)**: `docs/chatgpt-prompts.md`
+>
 > **배경만 붙여넣기용으로**: `docs/background-prompts.md`
 >
 > **ComfyUI로 한꺼번에 뽑기**: `tools/comfy/` 참고. 같은 프롬프트가 `tools/comfy/prompts.json`에 들어 있다(프롬프트를 고칠 땐 두 곳 다).
