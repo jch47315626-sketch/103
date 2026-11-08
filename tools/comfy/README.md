@@ -1,5 +1,31 @@
 # ComfyUI로 그림 뽑기
 
+## 내 PC의 Claude Code에게 맡기기 (제1~4화 71장)
+
+그래픽카드(GPU)가 있는 PC에서, 103동 폴더를 연 **Claude Code**에게 아래 글을 그대로 보낸다.
+ComfyUI가 깔려 있고 SDXL 계열 모델이 하나 이상 있어야 한다.
+
+```text
+tools/comfy/README.md 의 "내 PC의 Claude Code에게 맡기기" 순서대로 게임 제1~4화 그림 71장을 ComfyUI로 뽑아 줘.
+1. git fetch 하고 claude/amazing-brahmagupta-ww97bn 브랜치로 바꿔.
+2. ComfyUI가 http://127.0.0.1:8188 에서 켜져 있는지 확인해. 꺼져 있으면 이 PC에서 ComfyUI가 어디 있는지 찾아서 켜 줘. 새로 설치나 모델 내려받기가 필요하면 하기 전에 나한테 물어봐.
+3. pip install pillow "rembg[cpu]"
+4. python tools/comfy/generate.py --dry-run 으로 체크포인트 목록을 보고, 웹툰·애니 화풍에 맞는 SDXL 모델을 골라 줘. 여러 개면 나한테 물어봐.
+5. 시험으로 3장만: python tools/comfy/generate.py --ckpt <모델> --set ch1-4 --only bg_dawn --only cg_door_handle --only enemy_suit1501 --format webp
+   나온 그림을 보여 주고, 내가 괜찮다고 하면 6으로.
+6. 전부: python tools/comfy/generate.py --ckpt <모델> --set ch1-4 --skip-existing --format webp
+7. npm install 후 npm run img 로 71/71인지 확인하고, npm run dev 로 게임에서 그림이 제자리에 나오는지 봐 줘.
+8. public/img 와 docs/ch1-4-images.md 를 커밋해서 같은 브랜치에 푸시해 줘.
+```
+
+- 시간: GPU에 따라 한 장에 수십 초, 71장이면 대략 30분~1시간.
+- `--set ch1-4`는 `src/game/imageSlots.json`의 그림 자리마다 한 장을 뽑는다. `prompts.json`에 같은 그림이 있으면 그 SDXL 프롬프트를, 없으면(이벤트 그림·서 있는 그림 등) `docs/chatgpt-prompts.md`의 장면 설명을 쓴다.
+- 싸움 상대·서 있는 그림·주먹·아이콘은 rembg 로 배경을 지운다. 지워지지 않은 게 있으면 그 그림만 다시 뽑거나 손으로 지운다.
+- 인물 얼굴은 그림마다 조금씩 다를 수 있다. 같은 얼굴이 꼭 필요하면 캐릭터 시트를 레퍼런스로 쓰는 IP-Adapter 노드를 워크플로에 더하면 된다.
+- 마음에 안 드는 그림만 지우고 6을 다시 돌리면 빈 자리만 새로 뽑는다(`--skip-existing`). 후보 여러 장에서 고르려면 `--candidates 4`.
+
+---
+
 `docs/image-prompts.md`의 프롬프트를 ComfyUI에 한꺼번에 보내 `public/img/<이름>.png`로 받는다.
 ComfyUI는 자기 PC(GPU)에서 켜 두고, 이 스크립트는 그 서버의 API(`/prompt`)로 일을 보낸다.
 

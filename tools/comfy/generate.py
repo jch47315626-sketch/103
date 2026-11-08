@@ -6,6 +6,7 @@ ComfyUI를 켜 둔 상태에서(기본 http://127.0.0.1:8188) 실행한다.
     python tools/comfy/generate.py --ckpt 모델이름.safetensors
     python tools/comfy/generate.py --ckpt ... --only "bg_*"         # 배경만
     python tools/comfy/generate.py --ckpt ... --only enemy_doyun --candidates 4
+    python tools/comfy/generate.py --ckpt ... --set ch1-4 --skip-existing   # 게임 제1~4화에 필요한 71장
 
 prompts.json 의 그림마다 workflow_api.json 을 채워 /prompt 로 보내고,
 결과를 public/img/<이름>.png 로 저장한다. 표준 라이브러리만으로 돈다.
@@ -15,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import re
 import hashlib
 import io
 import json
@@ -43,6 +45,55 @@ def load_jobs(cfg: dict, with_variants: bool) -> list[dict]:
         if with_variants:
             for vname, vtext in cfg.get('variants', {}).get(img['kind'], {}).items():
                 jobs.append(dict(base, name=f"{img['name']}_{vname}", prompt=f"{img['prompt']}, {vtext}"))
+    return jobs
+
+
+def kind_of(name: str) -> str:
+    """ChatGPT 문서 이름의 앞머리로 종류를 정한다."""
+    for prefix, kind in (('bg_', 'bg'), ('fight_', 'fight'), ('enemy_', 'enemy'), ('cg_', 'cg'),
+                         ('pt_', 'portrait'), ('hud_', 'hud'), ('item_', 'item'), ('title', 'title')):
+        if name.startswith(prefix):
+            return kind
+    return 'ui'
+
+
+def chatgpt_prompt(md: str, name: str) -> str | None:
+    """docs/chatgpt-prompts.md 의 프롬프트에서 장면 설명만 꺼낸다 (화풍·크기 문장은 prompts.json 쪽을 쓴다)."""
+    i = md.find('### `' + name + '`')
+    if i < 0:
+        return None
+    a = md.find('```', i) + 3
+    text = md[a:md.find('```', a)].strip()
+    text = text.split(' Style:')[0]
+    sentences = re.split(r'(?<=\.)\s+', text)
+    drop = ('image (', 'transparent', 'cropped', 'no people unless', 'aspect')
+    return ' '.join(x for x in sentences if not any(d in x.lower() for d in drop)).rstrip('.')
+
+
+def load_ch14_jobs(cfg: dict) -> list[dict]:
+    """게임 제1~4화의 그림 자리(src/game/imageSlots.json)마다 한 장씩.
+    prompts.json 에 같은 그림이 있으면 그 SDXL 프롬프트를, 없으면 ChatGPT 문서의 장면 설명을 쓴다.
+    저장 이름은 게임이 알아보는 이름 중 하나다."""
+    slots = json.loads((ROOT / 'src' / 'game' / 'imageSlots.json').read_text(encoding='utf-8'))
+    md = (ROOT / 'docs' / 'chatgpt-prompts.md').read_text(encoding='utf-8')
+    known = {img['name']: img for img in cfg['images']}
+    jobs = []
+    for g in slots['groups']:
+        for slot in g['slots']:
+            names = slot['files']
+            hit = next((n for n in names if n in known), None)
+            if hit and known[hit]['kind'] in cfg['kinds'] and not (hit.startswith('title') and len(names) > 1 and hit != names[0]):
+                img = known[hit]
+                jobs.append(dict(img, slot=slot['slot'], kindcfg=cfg['kinds'][img['kind']]))
+                continue
+            name = names[0]
+            prompt = chatgpt_prompt(md, name)
+            if not prompt:
+                print(f'  ! {name}: 프롬프트를 찾지 못해 건너뜀')
+                continue
+            kind = kind_of(name)
+            jobs.append({'name': name, 'kind': kind, 'prompt': prompt, 'slot': slot['slot'],
+                         'people': kind in ('cg', 'bg'), 'kindcfg': cfg['kinds'][kind]})
     return jobs
 
 
@@ -135,7 +186,7 @@ class Comfy:
         raise TimeoutError(f'{timeout:.0f}초 안에 끝나지 않았다')
 
 
-def finish(png: bytes, job: dict, do_cutout: bool) -> bytes:
+def finish(png: bytes, job: dict, do_cutout: bool, fmt: str = 'png') -> bytes:
     """게임 크기로 맞추고, 필요하면 배경을 지운다. 라이브러리가 없으면 그대로 둔다."""
     kind = job['kindcfg']
     if do_cutout and kind.get('cutout'):
@@ -154,6 +205,14 @@ def finish(png: bytes, job: dict, do_cutout: bool) -> bytes:
             png = buf.getvalue()
         except ImportError:
             warn_once('Pillow 가 없어 게임 크기로 자르지 않았다 (pip install pillow)')
+    if fmt == 'webp':
+        try:
+            from PIL import Image  # type: ignore
+            buf = io.BytesIO()
+            Image.open(io.BytesIO(png)).save(buf, 'WEBP', quality=86, method=6)  # 투명도는 그대로
+            png = buf.getvalue()
+        except ImportError:
+            raise SystemExit('--format webp 에는 Pillow 가 필요하다 (pip install pillow)')
     return png
 
 
@@ -172,7 +231,8 @@ def main():
     ap.add_argument('--ckpt', help='체크포인트 파일 이름 (모르면 비워 두면 목록을 보여 준다)')
     ap.add_argument('--lora', action='append', metavar='이름[:세기]', help='LoRA, 여러 번 줄 수 있다')
     ap.add_argument('--only', action='append', metavar='패턴', help='이름 패턴 (예: "bg_*"), 여러 번 가능')
-    ap.add_argument('--kind', action='append', help='sheet bg fight enemy hud item title 중에서')
+    ap.add_argument('--kind', action='append', help='sheet bg fight enemy hud item title cg portrait 중에서')
+    ap.add_argument('--set', choices=['ch1-4'], help='ch1-4: 게임 제1~4화에 필요한 그림만 (docs/ch1-4-images.md 순서)')
     ap.add_argument('--no-variants', action='store_true', help='적·주먹 동작 변형은 건너뛴다')
     ap.add_argument('--candidates', type=int, default=1, help='그림마다 시드를 바꿔 몇 장 뽑을지')
     ap.add_argument('--seed', type=int, default=103, help='시드 기준값')
@@ -181,7 +241,8 @@ def main():
     ap.add_argument('--sampler', default='dpmpp_2m')
     ap.add_argument('--scheduler', default='karras')
     ap.add_argument('--out', default=str(ROOT / 'public' / 'img'))
-    ap.add_argument('--skip-existing', action='store_true', help='이미 있는 파일은 건너뛴다')
+    ap.add_argument('--skip-existing', action='store_true', help='이미 있는 파일은 건너뛴다 (확장자가 달라도)')
+    ap.add_argument('--format', choices=['png', 'webp'], default='png', help='webp 는 용량이 png 의 1/5 정도 (게임은 둘 다 읽는다)')
     ap.add_argument('--no-cutout', action='store_true', help='배경 지우기를 하지 않는다')
     ap.add_argument('--timeout', type=float, default=600)
     ap.add_argument('--dry-run', action='store_true', help='보내지 않고 작업 목록과 프롬프트만 보여 준다')
@@ -190,7 +251,7 @@ def main():
     cfg = json.loads((HERE / 'prompts.json').read_text(encoding='utf-8'))
     template = json.loads((HERE / 'workflow_api.json').read_text(encoding='utf-8'))
 
-    jobs = load_jobs(cfg, not args.no_variants)
+    jobs = load_ch14_jobs(cfg) if args.set == 'ch1-4' else load_jobs(cfg, not args.no_variants)
     if args.kind:
         jobs = [j for j in jobs if j['kind'] in args.kind]
     if args.only:
@@ -232,12 +293,16 @@ def main():
         for i in range(args.candidates):
             done += 1
             seed = seed_for(job['name'], args.seed, i)
+            ext = args.format
             if args.candidates == 1:
-                path = out_dir / f"{job['name']}.png"
+                path = out_dir / f"{job['name']}.{ext}"
             else:
                 cand_dir.mkdir(exist_ok=True)
-                path = cand_dir / f"{job['name']}__{seed}.png"
-            if args.skip_existing and path.exists():
+                path = cand_dir / f"{job['name']}__{seed}.{ext}"
+            # 같은 그림 자리의 다른 이름·확장자로 이미 있으면 그것도 '있음'으로 친다
+            same = [job['name']]
+            exists = any((path.parent / f'{n}.{e}').exists() for n in same for e in ('png', 'webp', 'jpg', 'jpeg'))
+            if args.skip_existing and (path.exists() or (args.candidates == 1 and exists)):
                 print(f'[{done}/{total}] {path.name} 있음, 건너뜀')
                 continue
             print(f'[{done}/{total}] {path.name} …', flush=True)
@@ -245,7 +310,7 @@ def main():
             try:
                 pid = comfy.queue(build_workflow(template, cfg, job, seed, args))
                 png = comfy.wait(pid, args.timeout)[0]
-                path.write_bytes(finish(png, job, not args.no_cutout))
+                path.write_bytes(finish(png, job, not args.no_cutout, args.format))
                 print(f'    저장 {path.relative_to(ROOT) if path.is_relative_to(ROOT) else path} ({time.time() - t0:.0f}초)')
             except (RuntimeError, TimeoutError) as e:
                 print(f'    실패: {e}')
