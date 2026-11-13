@@ -103,8 +103,17 @@ export class MapScene extends Phaser.Scene {
     this.area.draw(this, this.layer);
     for (const a of this.area.actors ?? []) {
       if (a.when && !a.when(this.flags)) continue;
-      const z = drawZombie(this, a.x, FLOOR, a.kind, 0.9);
-      z.root.setScale(-0.9, 0.9); // 태리 쪽(오른쪽)을 본다
+      const zi = slotKey(this, `map:${a.kind}`);
+      const z = { root: this.add.container(a.x, FLOOR) };
+      if (zi) {
+        const im = this.add.image(0, 0, zi).setOrigin(0.5, 1); // 그림은 오른쪽을 본다
+        im.setScale((a.kind === 'crawler' ? 90 : 170) / im.height);
+        z.root.add(im);
+      } else {
+        z.root.destroy();
+        z.root = drawZombie(this, a.x, FLOOR, a.kind, 0.9).root;
+        z.root.setScale(-0.9, 0.9); // 태리 쪽(오른쪽)을 본다
+      }
       this.layer.add(z.root);
       this.actors.set(a.id, z.root);
       this.tweens.add({ targets: z.root, y: FLOOR + 3, duration: 380, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
@@ -120,7 +129,15 @@ export class MapScene extends Phaser.Scene {
     const old = this.taeri?.root;
     const px = old ? old.x : x;
     old?.destroy();
-    this.taeri = drawTaeri(this, x ?? px, FLOOR, 1, this.look);
+    const img = slotKey(this, `map:taeri_${this.look.outfit ?? 'uni'}`);
+    if (img) {
+      // public/img 의 옆모습 그림 (오른쪽을 보는 전신)
+      const root = this.add.container(x ?? px, FLOOR);
+      const im = this.add.image(0, 0, img).setOrigin(0.5, 1);
+      im.setScale(170 / im.height);
+      root.add(im);
+      this.taeri = { root, lead: root, rear: root };
+    } else this.taeri = drawTaeri(this, x ?? px, FLOOR, 1, this.look);
     this.taeri.root.setScale(this.facing, 1);
     this.layer.add(this.taeri.root);
     this.cameras.main.startFollow(this.taeri.root, true, 0.15, 0.15, 0, 0);

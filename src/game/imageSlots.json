@@ -238,6 +238,27 @@
             "enemy_doyun"
           ],
           "use": "3화 12층 계단참의 도윤"
+        },
+        {
+          "slot": "enemy:hiker",
+          "files": [
+            "enemy_hiker"
+          ],
+          "use": "5화 11층 등산복 차림"
+        },
+        {
+          "slot": "enemy:pajama",
+          "files": [
+            "enemy_pajama"
+          ],
+          "use": "5화 11층 잠옷 차림"
+        },
+        {
+          "slot": "enemy:worker",
+          "files": [
+            "enemy_worker"
+          ],
+          "use": "5화 11층 작업복 차림"
         }
       ]
     },
@@ -551,6 +572,47 @@
             "chapter_card_bg"
           ],
           "use": "화 제목 카드 배경"
+        }
+      ]
+    },
+    {
+      "name": "9. 맵에서 걸어 다니는 모습 (옆모습, 투명 배경)",
+      "size": "1024x1536 세로, 투명 배경, 오른쪽을 보는 전신",
+      "slots": [
+        {
+          "slot": "map:taeri_casual",
+          "files": [
+            "map_taeri_casual"
+          ],
+          "use": "1화 아침, 사복 (안대 전)"
+        },
+        {
+          "slot": "map:taeri_uni",
+          "files": [
+            "map_taeri_uni"
+          ],
+          "use": "1~3화 교복"
+        },
+        {
+          "slot": "map:taeri_track",
+          "files": [
+            "map_taeri_track"
+          ],
+          "use": "4화부터 트레이닝복"
+        },
+        {
+          "slot": "map:crawler",
+          "files": [
+            "map_zombie_crawl"
+          ],
+          "use": "복도에 엎드린 감염자 (1501호 남자)"
+        },
+        {
+          "slot": "map:normal",
+          "files": [
+            "map_zombie_stand"
+          ],
+          "use": "복도에 서 있는 감염자"
         }
       ]
     }

@@ -7,13 +7,14 @@
 | --- | --- | --- |
 | 1. 이야기 배경 | 0 / 21 | 1536x1024 가로 → 가운데 띠를 잘라 쓴다 |
 | 2. 싸움 배경 (1인칭) | 0 / 4 | 1536x1024 가로 |
-| 3. 싸움 상대 (투명 배경) | 0 / 4 | 1024x1536 세로, 투명 배경 |
+| 3. 싸움 상대 (투명 배경) | 0 / 7 | 1024x1536 세로, 투명 배경 |
 | 4. 이벤트 그림 | 0 / 22 | 1536x1024 가로 |
 | 5. 대화용 서 있는 그림 (투명 배경) | 0 / 10 | 1024x1536 세로, 투명 배경 |
 | 6. 태리의 주먹 (1인칭, 투명 배경) | 0 / 2 | 1024x1024, 투명 배경 |
 | 7. 아이템 아이콘 (투명 배경) | 0 / 4 | 1024x1024, 투명 배경 |
 | 8. 타이틀 | 0 / 2 | 1536x1024 가로 |
-| **합계** | **0 / 69** | |
+| 9. 맵에서 걸어 다니는 모습 (옆모습, 투명 배경) | 0 / 5 | 1024x1536 세로, 투명 배경, 오른쪽을 보는 전신 |
+| **합계** | **0 / 77** | |
 
 ## 쓰는 법
 
@@ -189,7 +190,7 @@ Facing a thin gypsum balcony partition wall up close, a laundry rack beside it. 
 
 ## 3. 싸움 상대 (투명 배경)
 
-크기: 1024x1536 세로, 투명 배경 · 0/4장 들어 있음
+크기: 1024x1536 세로, 투명 배경 · 0/7장 들어 있음
 
 ### ⬜ `enemy_suit1501` — 1화 1501호 남자
 
@@ -213,6 +214,24 @@ A person afflicted by a mysterious illness: a middle-aged Korean woman in a kitc
 
 ```
 A person afflicted by a mysterious illness: a gentle-faced Korean man in his early 30s in a white dress shirt with a broken blue lanyard, face still recognizably kind, tragic rather than frightening, ashen grey skin, deeply reddened eyes with tiny pupils, vacant expression, dark rust-brown stains on the clothes, unsteady posture. Portrait image (2:3), waist-up, facing the viewer straight on, transparent background, light from the right. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
+```
+
+### ⬜ `enemy_hiker` — 5화 11층 등산복 차림
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
+```
+
+### ⬜ `enemy_pajama` — 5화 11층 잠옷 차림
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
+```
+
+### ⬜ `enemy_worker` — 5화 11층 작업복 차림
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
 ```
 
 ## 4. 이벤트 그림 — 결정적 장면에 화면 가득 뜬다
@@ -473,4 +492,38 @@ Wide 16:9 key art. Kang Taeri, a 27-year-old adult Korean woman and retired boxi
 
 ```
 Wide 16:9 image. A dark concrete wall texture with a faint green emergency light glow from below, empty center for a chapter title. Style: Korean webtoon (manhwa) illustration, semi-realistic, clean ink lines, soft cel shading, muted cold palette of concrete grey and night navy with small warm orange and deep red accents, cinematic lighting, quiet tense mood. No text, no letters, no logos, no watermark.
+```
+
+## 9. 맵에서 걸어 다니는 모습 (옆모습, 투명 배경)
+
+크기: 1024x1536 세로, 투명 배경, 오른쪽을 보는 전신 · 0/5장 들어 있음
+
+### ⬜ `map_taeri_casual` — 1화 아침, 사복 (안대 전)
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
+```
+
+### ⬜ `map_taeri_uni` — 1~3화 교복
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
+```
+
+### ⬜ `map_taeri_track` — 4화부터 트레이닝복
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
+```
+
+### ⬜ `map_zombie_crawl` — 복도에 엎드린 감염자 (1501호 남자)
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
+```
+
+### ⬜ `map_zombie_stand` — 복도에 서 있는 감염자
+
+```
+(docs/chatgpt-prompts.md 에 프롬프트 없음)
 ```
