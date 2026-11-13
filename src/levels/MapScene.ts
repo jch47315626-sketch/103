@@ -3,7 +3,7 @@
 import Phaser from 'phaser';
 import { drawTaeri, drawZombie, type Taeri, type TaeriLook } from '../game/art';
 import { coverImage, slotKey } from '../game/images';
-import { sfx } from '../game/sfx';
+import { horror, sfx, startDrone, stopDrone } from '../game/sfx';
 import { button, C, H, HEX, text, title, W } from '../game/theme';
 import { drawBg } from '../story/backgrounds';
 import { saveProgress } from '../story/progress';
@@ -37,6 +37,13 @@ export class MapScene extends Phaser.Scene {
     areaName: Phaser.GameObjects.Text;
   };
   private objective?: { text: string; target?: string; count?: string[] };
+  private mood = 0;
+  private vignette?: Phaser.GameObjects.Image;
+  private dim?: Phaser.GameObjects.Rectangle;
+  private memories = 0;
+  private memoryTotal = 0;
+  private dread = 0; // 다음 불길한 소리까지 남은 시간(ms)
+  private pulse = 0;
   /** 말풍선·서술을 넘길 때 부르는 함수 */
   private advanceFn?: () => void;
 
@@ -50,6 +57,12 @@ export class MapScene extends Phaser.Scene {
     this.actors = new Map();
     this.busy = false;
     this.objective = undefined;
+    this.mood = 0;
+    this.vignette = undefined;
+    this.dim = undefined;
+    this.memories = 0;
+    const count = (list: Action[]): number => list.reduce((n, a) => n + (a.a === 'memory' ? 1 : a.a === 'if' ? count(a.then) : 0), 0);
+    this.memoryTotal = Object.values(this.level.areas).reduce((n, ar) => n + ar.objects.reduce((m, o) => m + count(o.do), 0), 0);
   }
 
   create() {
@@ -94,6 +107,7 @@ export class MapScene extends Phaser.Scene {
       z.root.setScale(-0.9, 0.9); // 태리 쪽(오른쪽)을 본다
       this.layer.add(z.root);
       this.actors.set(a.id, z.root);
+      this.tweens.add({ targets: z.root, y: FLOOR + 3, duration: 380, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
     }
     this.makeTaeri(x);
     this.cameras.main.setBounds(0, 0, Math.max(W, this.area.width), H);
@@ -136,6 +150,57 @@ export class MapScene extends Phaser.Scene {
     this.hud = { objective, items, prompt, marker, areaName };
   }
 
+  private refreshItems() {
+    const mem = this.memoryTotal ? `기억 ${this.memories}/${this.memoryTotal}` : '';
+    this.hud.items.setText([mem, ...this.items].filter(Boolean).join(' · '));
+  }
+
+  /** 분위기: 어둠이 태리 주변만 남기고 조여 온다 */
+  private setMood(v: number) {
+    this.mood = v;
+    if (!this.textures.exists('vig')) {
+      const tex = this.textures.createCanvas('vig', 2400, 1200)!;
+      const ctx = tex.getContext();
+      const grad = ctx.createRadialGradient(1200, 600, 110, 1200, 600, 520);
+      grad.addColorStop(0, 'rgba(4,5,8,0)');
+      grad.addColorStop(0.55, 'rgba(4,5,8,0.62)');
+      grad.addColorStop(1, 'rgba(4,5,8,0.96)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 2400, 1200);
+      tex.refresh();
+    }
+    if (!this.vignette) this.vignette = this.add.image(0, FLOOR - 110, 'vig').setDepth(45).setAlpha(0);
+    if (!this.dim) this.dim = this.add.rectangle(0, 0, W, H, 0x101830, 0).setOrigin(0).setScrollFactor(0).setDepth(44);
+    this.tweens.add({ targets: this.vignette, alpha: v === 0 ? 0 : v === 1 ? 0.7 : 1, duration: 1200 });
+    this.tweens.add({ targets: this.dim, fillAlpha: v === 0 ? 0 : v === 1 ? 0.3 : 0.18, duration: 1200 });
+    if (v > 0) startDrone(); else stopDrone();
+    this.dread = 5000;
+  }
+
+  /** 가끔 들려오는 것들. 무엇인지는 보여 주지 않는다 */
+  private ambient(dms: number) {
+    if (this.mood === 0) return;
+    this.dread -= dms;
+    if (this.dread <= 0 && !this.busy) {
+      this.dread = 7000 + Math.random() * 7000;
+      const r = Math.random();
+      if (r < 0.35) horror.distant();
+      else if (r < 0.6) horror.scratch();
+      else if (r < 0.75) horror.cry();
+      else {
+        // 형광등이 나갔다 들어온다
+        if (this.vignette) this.tweens.add({ targets: this.vignette, alpha: 0.5, duration: 60, yoyo: true, repeat: 2 });
+        if (this.dim) this.tweens.add({ targets: this.dim, fillAlpha: 0.6, duration: 60, yoyo: true, repeat: 2 });
+      }
+    }
+    // 가까이에 그것이 있으면 심장이 빨라진다
+    const near = [...this.actors.values()].reduce((d, a) => Math.min(d, Math.abs(a.x - this.taeri.root.x)), Infinity);
+    if (near < 900) {
+      this.pulse -= dms;
+      if (this.pulse <= 0) { this.pulse = 450 + near; sfx.heartbeat(); }
+    }
+  }
+
   private refreshObjective() {
     const o = this.objective;
     if (!o) { this.hud.objective.setText(''); return; }
@@ -155,6 +220,8 @@ export class MapScene extends Phaser.Scene {
       dir = dir || this.touchDir;
     }
     const r = this.taeri.root;
+    this.vignette?.setX(r.x);
+    this.ambient(dms);
     if (dir) {
       this.facing = dir;
       r.setScale(dir, 1);
@@ -210,9 +277,20 @@ export class MapScene extends Phaser.Scene {
         this.tweens.add({ targets: this.hud.objective, alpha: { from: 0.2, to: 1 }, duration: 400 });
         return next();
       case 'flag': this.flags.add(a.set); this.refreshObjective(); return next();
+      case 'memory': return this.memory(a.text, next);
+      case 'mood': this.setMood(a.v); return next();
+      case 'charge': {
+        const z = this.actors.get(a.id);
+        if (!z) return next();
+        horror.growl();
+        this.cameras.main.shake(700, 0.006);
+        this.tweens.killTweensOf(z);
+        this.tweens.add({ targets: z, x: this.taeri.root.x - 70, duration: 650, ease: 'Quad.In', onComplete: next });
+        return;
+      }
       case 'item':
         if (!this.items.includes(a.name)) this.items.push(a.name);
-        this.hud.items.setText(this.items.join(' · '));
+        this.refreshItems();
         sfx.chime(2);
         this.toast(`얻었다 — ${a.name}`);
         return next();
@@ -268,6 +346,23 @@ export class MapScene extends Phaser.Scene {
     this.tweens.add({ targets: c, scale: 1, duration: 120, ease: 'Back.Out' });
     if (obj) { this.cameras.main.shake(120, 0.004); }
     this.waitAdvance(Math.max(1600, str.length * 75), () => { c.destroy(); next(); });
+  }
+
+  /** 기억 조각: 원작의 문장이 화면을 스쳐 간다 */
+  private memory(str: string, next: () => void) {
+    const o = this.overlay();
+    const bg = this.add.rectangle(0, 0, W, H, 0x120d06, 0).setOrigin(0);
+    const tag = text(this, W / 2, 150, '— 기억 —', 12, HEX(C.orange), { fontStyle: '700' }).setOrigin(0.5).setAlpha(0);
+    const t = text(this, W / 2, H / 2 - 10, str, 19, '#ead9b4', { fontFamily: SERIF, fontStyle: 'italic', align: 'center', lineSpacing: 12, wordWrap: { width: 700 } }).setOrigin(0.5).setAlpha(0);
+    o.add([bg, tag, t]);
+    this.tweens.add({ targets: bg, fillAlpha: 0.86, duration: 500 });
+    this.tweens.add({ targets: [tag, t], alpha: 1, duration: 700, delay: 250 });
+    sfx.chime(0);
+    this.memories += 1;
+    this.refreshItems();
+    this.waitAdvance(Math.max(4200, str.length * 95), () => {
+      this.tweens.add({ targets: o.list, alpha: 0, duration: 400, onComplete: () => { o.destroy(); next(); } });
+    });
   }
 
   private caption(str: string, next: () => void) {
@@ -460,7 +555,9 @@ export class MapScene extends Phaser.Scene {
     const o = this.overlay();
     const r = this.add.rectangle(0, 0, W, H, 0x000000).setOrigin(0).setAlpha(0);
     const t = text(this, W / 2, H / 2 - 20, line, 22, HEX(C.paper), { fontFamily: SERIF }).setOrigin(0.5).setAlpha(0);
-    const e = title(this, W / 2, H / 2 + 40, `〈제${this.level.no}화 끝〉`, 20, '#888').setOrigin(0.5).setAlpha(0);
+    const mem = this.memoryTotal ? `   기억 ${this.memories}/${this.memoryTotal}` : '';
+    const e = title(this, W / 2, H / 2 + 40, `〈제${this.level.no}화 끝〉${mem}`, 20, '#888').setOrigin(0.5).setAlpha(0);
+    stopDrone();
     o.add([r, t, e]);
     this.tweens.add({ targets: r, alpha: 1, duration: 800 });
     this.tweens.add({ targets: t, alpha: 1, delay: 700, duration: 800 });

@@ -12,6 +12,12 @@ export type Action =
   /** 목표. count 가 있으면 (n/개수)를 붙인다. target 위에 ▼ 표시 */
   | { a: 'objective'; text: string; target?: string; count?: string[] }
   | { a: 'flag'; set: string }
+  /** 기억 조각: 원작의 문장이 스쳐 간다. 찾을수록 태리가 누구인지 드러난다 */
+  | { a: 'memory'; text: string }
+  /** 분위기: 0 평범한 아침, 1 불이 죽은 집, 2 어두운 복도 */
+  | { a: 'mood'; v: 0 | 1 | 2 }
+  /** 감염자가 태리에게 달려든다 */
+  | { a: 'charge'; id: string }
   | { a: 'item'; name: string }
   | { a: 'phone'; from: string; text: string; alert?: boolean }
   | { a: 'broadcast'; lines: string[] }

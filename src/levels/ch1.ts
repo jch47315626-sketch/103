@@ -31,10 +31,18 @@ function drawHome(scene: Phaser.Scene, layer: Phaser.GameObjects.Container) {
   g.fillStyle(0xf2f2f0).fillTriangle(500, 178, 540, 178, 520, 200);
   g.fillStyle(C.red).fillTriangle(512, 196, 528, 196, 520, 208);
   g.fillStyle(0x2a2c30).fillRect(360, 300, 90, FLOOR - 300); // 침대
+  // 방 선반의 챔피언 벨트
+  g.fillStyle(0x5a4632).fillRect(590, 250, 90, 8);
+  g.fillStyle(0x7a1f1f).fillRoundedRect(596, 226, 78, 22, 6);
+  g.fillStyle(0xd9b24a).fillCircle(635, 237, 13);
   // 거실: 식탁 위 휴대폰, 분홍 백팩, 베란다 창, 천장 스피커
   g.fillStyle(0x6b5238).fillRect(820, 360, 180, 14).fillRect(830, 374, 10, 78).fillRect(980, 374, 10, 78);
   g.fillStyle(0x111111).fillRoundedRect(880, 350, 26, 12, 3);
   g.fillStyle(0xe58aa8).fillRoundedRect(1030, 380, 48, 72, 10);
+  // 쌓아 둔 배달 용기, 벽에 붙인 합격 통지서
+  for (let i = 0; i < 5; i++) g.fillStyle(i % 2 ? 0xe8e4da : 0xd6d0c2).fillRect(748, 440 - i * 12, 44, 10);
+  g.fillStyle(0xf4f1e6).fillRect(1122, 200, 40, 54);
+  g.fillStyle(C.red).fillCircle(1150, 242, 6);
   g.fillStyle(0x2a3140).fillRect(1140, 120, 170, 230);
   g.lineStyle(3, 0x777777).strokeRect(1140, 120, 170, 230).lineBetween(1225, 120, 1225, 350);
   for (let i = 0; i < 4; i++) g.fillStyle(0xb8c2cc, 0.12).fillEllipse(1180 + i * 40, 300, 90, 30);
@@ -115,9 +123,37 @@ export const CH1: Level = {
           id: 'phone', x: 893, label: '휴대폰', when: (f) => !f.has('phone'),
           do: [
             { a: 'phone', from: '아빠', text: '태리야, 오늘 입학식이지. 아빠가 차 가지고 갈까. 학교 앞까지만이라도' },
-            { a: 'bark', text: '……내 자퇴서에 도장 찍었던 사람이.' },
-            { a: 'bark', text: '혼자 가.' },
+            { a: 'memory', text: '열다섯 살 봄, 교복을 입은 건 딱 한 달이었다.\n“학교 다닐 시간에 샌드백 쳐라.”\n자퇴서 보호자 서명란에, 아빠의 도장.' },
+            { a: 'bark', text: '……혼자 가.' },
             { a: 'flag', set: 'phone' },
+          ],
+        },
+        {
+          id: 'bed', x: 405, label: '침대', when: (f) => !f.has('m_bed') && !f.has('alarmed'),
+          do: [
+            { a: 'flag', set: 'm_bed' },
+            { a: 'memory', text: '새벽 네 시에 이불이 걷혔다. 여섯 시부터 미트를 쳤다.\n주먹 마디가 터져도 아빠는 미트를 내리지 않았다.\n“한 번만 더.” 그 한 번이 몇백 번이 되었다.' },
+          ],
+        },
+        {
+          id: 'belt', x: 635, label: '챔피언 벨트', when: (f) => !f.has('m_belt') && !f.has('alarmed'),
+          do: [
+            { a: 'flag', set: 'm_belt' },
+            { a: 'memory', text: '28전 28승 25KO. 링네임 ‘외눈의 폭격기’.\n스물여섯, 버팅에 왼쪽 눈의 망막이 떨어져 나갔다.\n링 위에서는 이룰 수 있는 걸 다 이뤘다. 문제는 링 밖이었다.' },
+          ],
+        },
+        {
+          id: 'boxes', x: 770, label: '배달 용기', when: (f) => !f.has('m_boxes') && !f.has('alarmed'),
+          do: [
+            { a: 'flag', set: 'm_boxes' },
+            { a: 'memory', text: '은퇴하고 2년, 이 집에서 밥을 지은 적이 없다.\n문을 열면 늘 같은 라이더가 서 있었다.\n“맛있게 드세요, 챔피언.”\n그 말이 처음엔 거슬렸다. 나중엔 그 말을 기다렸다.' },
+          ],
+        },
+        {
+          id: 'notice', x: 1142, label: '합격 통지서', when: (f) => !f.has('m_notice') && !f.has('alarmed'),
+          do: [
+            { a: 'flag', set: 'm_notice' },
+            { a: 'memory', text: '열여덟 번째 불합격 문자를 받은 다음 날, 옆집 남자를 붙잡았다.\n“나 같은 사람도 고등학교 갈 수 있어요?”\n“서류는 같이 보자.” — 1503호 한도윤.\n합격. 벨트를 받던 날보다 손이 더 떨렸다.' },
           ],
         },
         {
@@ -130,8 +166,12 @@ export const CH1: Level = {
           ],
         },
         {
-          id: 'window', x: 1225, label: '베란다 창', when: (f) => !f.has('door1'),
-          do: [{ a: 'bark', text: '해무 너머로 구급차 경광등이 번졌다가 사라진다.' }],
+          id: 'window', x: 1240, label: '베란다 창', when: (f) => !f.has('alarmed'),
+          do: [{ a: 'sfx', name: 'groan' }, { a: 'bark', text: '해무 너머로 경광등이 번졌다가 사라진다. ……구급차가 벌써 세 대째.' }],
+        },
+        {
+          id: 'window', x: 1240, label: '베란다 창', when: (f) => f.has('alarmed') && !f.has('door1'),
+          do: [{ a: 'bark', text: '경적이 울린다. 길게. 너무 길게. 누가 핸들에 엎어진 것처럼.' }],
         },
         {
           id: 'door', x: 1560, label: '현관문', when: (f) => !f.has('alarm'),
@@ -144,6 +184,8 @@ export const CH1: Level = {
             { a: 'flag', set: 'alarmed' },
             { a: 'wait', ms: 500 },
             { a: 'broadcast', lines: ['103동 주민 여러분께 긴급히 알려드립니다. 절대 세대 밖으로 나오지 마시고, 누가 와도 현관문을 열지 마시고…', '……뭐, 뭐야. 놔! 이거 안 놔?! 으아아악!'] },
+            { a: 'mood', v: 1 },
+            { a: 'caption', text: '창밖에서 경적이 길게 울린다. 그다음은 비명이었다. 멀리서. 그리고 조금 더 가까이서.' },
             { a: 'shake', s: 0.012 }, { a: 'sfx', name: 'bang' },
             { a: 'bark', who: 'door', text: '쾅! 쾅쾅쾅!' },
             { a: 'bark', who: 'door', text: '태리야! 문 열어 줘! 살려 줘!' },
@@ -160,6 +202,7 @@ export const CH1: Level = {
             { a: 'peep', bg: 'peep', lines: ['외시경 너머에 오빠가 있었다. 목덜미가 뜯겨 나가 있었다.', '반달이 되던 눈에 실핏줄이 번지고 있었다.', '그 뒤에서, 1501호 남자가 네 발로 기고 있었다.'] },
             { a: 'bark', who: 'door', text: '문…… 열어…… 줘……' },
             { a: 'bark', text: '미안해…… 미안해, 오빠…… 미안해……' },
+            { a: 'memory', text: '실명 판정을 받던 날에도 울지 않았다.\n세계를 제패한 두 주먹이,\n고작 손잡이 하나를 내리지 못해서.' },
             { a: 'dark', ms: 2600, text: '끼이이익―\n손톱이 철문을 긁는 소리.\n그리고, 계단 쪽으로 멀어지는 발소리.' },
             { a: 'flag', set: 'door1' },
             { a: 'objective', text: '외시경을 본다', target: 'door' },
@@ -187,7 +230,10 @@ export const CH1: Level = {
       onEnter: {
         when: (f) => !f.has('won1501'),
         do: [
-          { a: 'caption', text: '철컥. 바닥을 핥던 것이 고개를 들었다. 흰자위가 전부 핏빛이었다.' },
+          { a: 'mood', v: 2 },
+          { a: 'caption', text: '철컥. 엘리베이터 앞, 바닥을 핥던 것이 고개를 들었다. 흰자위가 전부 핏빛이었다.' },
+          { a: 'wait', ms: 500 },
+          { a: 'charge', id: 'man1501' },
           { a: 'fight', id: 'm1501' },
           { a: 'flag', set: 'won1501' }, { a: 'remove', id: 'man1501' },
           { a: 'bark', text: '……' },
@@ -206,13 +252,20 @@ export const CH1: Level = {
             { a: 'caption', text: '비상계단 너머에서 수십 개의 발소리가 올라온다. 그 어딘가에 오빠도 있을 것이다.' },
             { a: 'objective', text: '붕대를 감는다' },
             { a: 'bandage' }, { a: 'flag', set: 'taped' },
-            { a: 'bark', text: '왼쪽은, 벽에.' },
+            { a: 'memory', text: '“왼쪽은 벽에 맡겨라.”\n보이지 않는 왼쪽을 벽에 붙이는 것.\n그것도 아빠에게서 배운 것이었다.' },
             { a: 'objective', text: '방화문으로 간다', target: 'firedoor' },
           ],
         },
         { id: '1501', x: 420, label: '1501호', do: [{ a: 'bark', text: '안쪽에서 열려 있다. 매일 엘리베이터에서 목례만 하던 사람.' }] },
         { id: 'home', x: 660, label: '1502호', when: (f) => !f.has('taped'), do: [{ a: 'goto', area: 'home', x: 1540 }] },
-        { id: '1503', x: 900, label: '1503호', do: [{ a: 'bark', text: '오빠네 집. ……대답이 없다.' }] },
+        {
+          id: '1503', x: 900, label: '1503호', when: (f) => !f.has('m_1503'),
+          do: [
+            { a: 'flag', set: 'm_1503' },
+            { a: 'memory', text: '작년 11월 7일, 이 문고리에 걸려 있던 보온 용기.\n― 생일 축하해. 국은 데워 먹어. 1503.\n그 국을 먹지 않았다. 고맙다는 말도 하지 않았다.' },
+            { a: 'bark', text: '……오빠네 집. 대답이 없다.' },
+          ],
+        },
         { id: 'hydrant', x: 1710, label: '소화전함', do: [{ a: 'bark', text: '소화전함. 손잡이가 단단하다.' }] },
         {
           id: 'firedoor', x: 2060, label: '방화문', when: (f) => f.has('taped'),

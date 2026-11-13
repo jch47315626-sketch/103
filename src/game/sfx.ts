@@ -143,3 +143,61 @@ export function cueLeft(when: number) {
   o.start(when);
   o.stop(when + 0.45);
 }
+
+// ---------- 호러 분위기 ----------
+
+let drone: { stop: () => void } | null = null;
+
+/** 낮게 깔리는 웅웅거림. 사태가 시작된 뒤 계속 깔린다 */
+export function startDrone() {
+  if (!ctx || drone) return;
+  const g = ctx.createGain();
+  g.gain.value = 0;
+  g.gain.linearRampToValueAtTime(muted ? 0 : 0.06, ctx.currentTime + 3);
+  const f = ctx.createBiquadFilter();
+  f.type = 'lowpass';
+  f.frequency.value = 170;
+  const oscs = [55, 58.2, 82.6].map((hz) => {
+    const o = ctx!.createOscillator();
+    o.type = 'sawtooth';
+    o.frequency.value = hz;
+    o.connect(f);
+    o.start();
+    return o;
+  });
+  // 천천히 숨 쉬듯 커졌다 작아진다
+  const lfo = ctx.createOscillator();
+  const lg = ctx.createGain();
+  lfo.frequency.value = 0.13;
+  lg.gain.value = 0.025;
+  lfo.connect(lg).connect(g.gain);
+  lfo.start();
+  f.connect(g).connect(ctx.destination);
+  drone = {
+    stop: () => {
+      const t = ctx!.currentTime;
+      g.gain.cancelScheduledValues(t);
+      g.gain.setValueAtTime(g.gain.value, t);
+      g.gain.linearRampToValueAtTime(0, t + 1);
+      setTimeout(() => { [...oscs, lfo].forEach((o) => o.stop()); }, 1200);
+    },
+  };
+}
+
+export function stopDrone() {
+  drone?.stop();
+  drone = null;
+}
+
+export const horror = {
+  /** 손톱이 철문을 긁는 소리 */
+  scratch() {
+    for (let i = 0; i < 3; i++) setTimeout(() => noise(0.5, 2600 + i * 300, 9, 0.16, 'bandpass', 1500), i * 620);
+  },
+  /** 멀리, 아래층 어딘가에서 */
+  distant() { tone(52, 0.5, 0.3, 'sine', 34); noise(0.4, 220, 1, 0.12); },
+  /** 어딘가의 짧은 비명 */
+  cry() { tone(720, 0.5, 0.05, 'sawtooth', 380); },
+  /** 문 너머의 그르렁거림 */
+  growl() { tone(72, 1.4, 0.2, 'sawtooth', 58); tone(77, 1.4, 0.12, 'sawtooth', 61); },
+};

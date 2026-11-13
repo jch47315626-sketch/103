@@ -62,6 +62,7 @@ export class CombatScene extends Phaser.Scene {
   private views = new Map<number, NoteView>();
   private headCol: Col = 1;
   private lookIdx = 0;
+  private danger!: Phaser.GameObjects.Rectangle;
   private ui!: {
     hp: Phaser.GameObjects.Graphics;
     poise: Phaser.GameObjects.Graphics;
@@ -291,6 +292,14 @@ export class CombatScene extends Phaser.Scene {
       text(this, colX(c) - 50, this.rowY[r] - 34, GRID_KEYS[r][c], 13, HEX(ROW_COLOR[r]), { fontStyle: '700' }).setAlpha(0.55).setDepth(7);
     }
 
+    // 가장자리의 어둠: 보이는 건 눈앞의 그것뿐
+    const edge = this.add.graphics().setDepth(4.6);
+    for (let i = 0; i < 14; i++) {
+      const t = (14 - i) * 9;
+      edge.fillStyle(0x000000, 0.045).fillRect(0, 0, W, t).fillRect(0, PANEL - t, W, t).fillRect(W - t * 1.6, 0, t * 1.6, PANEL);
+    }
+    this.danger = this.add.rectangle(0, 0, W, PANEL, 0x8a0000, 0).setOrigin(0).setDepth(4.7);
+
     // 안대 쪽: 화면 왼쪽이 어둡다
     const blind = this.add.graphics().setDepth(8.5);
     const ally = !!this.fight?.ally;
@@ -447,7 +456,7 @@ export class CombatScene extends Phaser.Scene {
     }
     const g = this.ui.cells;
     g.clear();
-    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) g.lineStyle(1, 0xffffff, 0.12).strokeRoundedRect(colX(c) - 55, this.rowY[r] - 38, 110, 76, 10);
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) this.fist(g, colX(c), this.rowY[r], 1, 0xffffff, 0, 0.1);
     const due = new Set<string>();
     for (const [id, v] of this.views) {
       const n = v.note;
@@ -466,20 +475,54 @@ export class CombatScene extends Phaser.Scene {
         const color = n.kind === 'stop' ? 0xffffff : n.follow !== undefined ? 0xffd23f : ROW_COLOR[n.row!];
         const sc = 1 + Math.max(0, left / this.approach) * 1.2;
         if (n.holding && n.hold) {
-          // 클린치: 버틴 만큼 차오른다
+          // 클린치: 주먹을 쥔 채 버틴 만큼 차오른다
           const f = Phaser.Math.Clamp((b - n.beat) / n.hold, 0, 1);
-          v.ring.fillStyle(color, 0.35).fillRoundedRect(x - 55, y - 38, 110, 76, 10);
-          v.ring.fillStyle(color, 0.9).fillRect(x - 50, y + 26, 100 * f, 8);
-          v.ring.lineStyle(4, 0xffffff, 1).strokeRoundedRect(x - 55, y - 38, 110, 76, 10);
+          this.fist(v.ring, x, y, 1, color, 0.9, 1);
+          v.ring.fillStyle(color, 0.9).fillRect(x - 50, y + 44, 100 * f, 8);
+          v.ring.lineStyle(2, 0xffffff, 0.8).strokeRect(x - 50, y + 44, 100, 8);
         } else {
-          v.ring.fillStyle(color, 0.15 + 0.45 * p).fillRoundedRect(x - 55, y - 38, 110, 76, 10);
-          v.ring.lineStyle(4, color, 1).strokeRoundedRect(x - 55 * sc, y - 38 * sc, 110 * sc, 76 * sc, 10);
-          if (n.hold) v.ring.lineStyle(2, color, 0.7).strokeRoundedRect(x - 60, y - 43, 120, 86, 12);
+          // 칸에 놓인 주먹 자리(점점 또렷해진다) + 날아오는 주먹 테두리(줄어들어 겹치는 순간이 박자)
+          this.fist(v.ring, x, y, 1, color, 0.12 + 0.5 * p, 0.35 + 0.65 * p);
+          if (left > 0) this.fist(v.ring, x, y, sc, color, 0, 0.9);
+          if (n.hold) v.ring.lineStyle(2, color, 0.7).strokeRoundedRect(x - 62, y - 48, 124, 100, 14);
         }
         if (left < this.approach * 0.6 && n.kind !== 'stop') due.add(GRID_KEYS[n.row!][n.col!].toLowerCase());
       }
     }
     for (const [k, rect] of this.ui.pad) rect.setStrokeStyle(due.has(k) ? 3 : 1, due.has(k) ? C.orange : 0x555a60);
+  }
+
+  /** 붕대 감은 주먹 (정면). fillA = 붕대 흰색의 진하기, lineA = 테두리 진하기 */
+  private fist(g: Phaser.GameObjects.Graphics, x: number, y: number, sc: number, color: number, fillA: number, lineA: number) {
+    const w = 98 * sc, h = 68 * sc, l = x - w / 2, t = y - h / 2;
+    if (fillA > 0) {
+      g.fillStyle(0xf4f4f2, fillA).fillRoundedRect(l, t, w, h, 16 * sc);
+      for (let i = 0; i < 4; i++) g.fillCircle(l + (w * (i + 0.5)) / 4, t + 3 * sc, w / 8 - 1); // 너클 네 마디
+      g.fillStyle(0xe2e2dd, fillA).fillRoundedRect(l + 4 * sc, y + 2 * sc, w * 0.44, h * 0.38, 9 * sc); // 엄지
+      g.fillStyle(C.red, fillA).fillRect(x - w * 0.36, t + h, w * 0.72, 7 * sc); // 손목의 붉은 띠
+    }
+    g.lineStyle(Math.max(2, 4 * Math.min(1, sc)), color, lineA).strokeRoundedRect(l, t, w, h, 16 * sc);
+    for (let i = 0; i < 4; i++) {
+      g.beginPath();
+      g.arc(l + (w * (i + 0.5)) / 4, t + 3 * sc, w / 8 - 1, Math.PI, 0);
+      g.strokePath();
+    }
+    g.lineStyle(2, color, lineA * 0.6); // 감아 올린 붕대 줄
+    for (let k = 1; k <= 3; k++) g.lineBetween(l + 6 * sc, t + (k * h) / 4 + 4 * sc, l + w - 6 * sc, t + (k * h) / 4 - 4 * sc);
+  }
+
+  /** 맞힌 순간: 주먹 도장이 쾅 찍힌다 */
+  private stamp(x: number, y: number, color: number, big: boolean) {
+    const g = this.add.graphics().setDepth(9.5);
+    this.fist(g, 0, 0, 1, color, 1, 1);
+    g.lineStyle(4, 0xffffff, 0.9);
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + 0.2;
+      g.lineBetween(Math.cos(a) * 70, Math.sin(a) * 56, Math.cos(a) * (big ? 108 : 92), Math.sin(a) * (big ? 86 : 72));
+    }
+    g.setPosition(x, y).setScale(big ? 1.5 : 1.3);
+    this.tweens.add({ targets: g, scale: 1, duration: 90, ease: 'Back.Out' });
+    this.tweens.add({ targets: g, alpha: 0, delay: 140, duration: 260, onComplete: () => g.destroy() });
   }
 
   private drawHud(b: number) {
@@ -489,6 +532,8 @@ export class CombatScene extends Phaser.Scene {
     const bw = 220, bx = W - 16 - bw;
     pr.fillStyle(0x2a2d31).fillRect(bx, 26, bw, 8);
     pr.fillStyle(C.orange).fillRect(bx, 26, bw * Phaser.Math.Clamp(b / s.totalBeats, 0, 1), 8);
+    // 기회가 하나 남으면 심장 박동에 맞춰 붉게 조여 온다
+    this.danger.setFillStyle(0x8a0000, this.fight?.mode === 'story' && s.lives <= 1 && s.outcome === 'ongoing' ? 0.1 + 0.12 * Math.abs(Math.sin(b * Math.PI)) : 0);
     if (this.fight) {
       const lives = this.fight.mode === 'story' ? `\n버틸 수 있음 ${'●'.repeat(Math.max(0, s.lives))}${'○'.repeat(Math.max(0, 3 - s.lives))}` : '';
       this.ui.counts.setText(`PERFECT ${s.perfects}  GOOD ${s.goods}  MISS ${s.misses}${lives}`);
@@ -598,6 +643,7 @@ export class CombatScene extends Phaser.Scene {
           break;
         }
         if (n.kind === 'dodge') { sfx.whoosh(); this.resetPose(); break; }
+        this.stamp(pos.x, pos.y, n.follow !== undefined ? 0xffd23f : ROW_COLOR[n.row!], n.row === 2 || !!n.finisher);
         if (!z) { if (this.fight?.bg === 'wall') this.wallBreak(); else sfx.whoosh(); break; }
         if (n.row === 2) sfx.heavy(); else sfx.punch();
         cam.shake(70, n.row === 2 ? 0.01 : 0.004);
